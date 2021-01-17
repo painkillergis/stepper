@@ -3,10 +3,15 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
   kotlin("jvm") version "1.4.21"
   application
+  id("com.github.johnrengelman.shadow") version "4.0.4"
+}
+
+application {
+  mainClassName = "com.painkiller.recommendations.ServerKt"
 }
 
 group = "com.painkiller"
-val major = 0
+val major = 1
 val minor = 0
 
 repositories {
@@ -45,7 +50,7 @@ tasks.named("processResources") {
       .start()
       .run {
         val (sha, patch) = inputStream.bufferedReader().readText().split("\n")
-        file("src/main/resources/version.properties").writeText("sha=$sha\nversion=$major.$minor.$patch")
+        file("src/main/resources/version.properties").writeText("sha=$sha\nversion=v$major.$minor.$patch")
       }
   }
 }

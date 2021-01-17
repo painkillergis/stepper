@@ -30,6 +30,6 @@ class VersionBSpec {
     val version = runBlocking { httpClient.get<Version>("/version") }
 
     assertThat(version.sha, matchesPattern("[0-9a-f]{40}"))
-    assertThat(version.version, matchesPattern("\\d+\\.\\d+\\.\\d+"))
+    assertThat(version.version, matchesPattern("v\\d+\\.\\d+\\.\\d+"))
   }
 }
