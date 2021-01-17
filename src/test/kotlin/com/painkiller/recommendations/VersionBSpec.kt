@@ -4,10 +4,11 @@ import io.ktor.client.*
 import io.ktor.client.request.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
+import org.hamcrest.Matchers.matchesPattern
+import org.hamcrest.junit.MatcherAssert.assertThat
 import org.junit.jupiter.api.extension.ExtendWith
 import org.junit.jupiter.api.extension.Extensions
 import kotlin.test.Test
-import kotlin.test.assertEquals
 
 @ExperimentalCoroutinesApi
 @Extensions(
@@ -25,6 +26,6 @@ class VersionBSpec {
   fun `get _version`() {
     val version = runBlocking { httpClient.get<Version>("/version") }
 
-    assertEquals(Version("0.0.0"), version)
+    assertThat(version.version, matchesPattern("\\d+\\.\\d+\\.\\d+"))
   }
 }

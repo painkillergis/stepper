@@ -9,16 +9,14 @@ import io.ktor.server.netty.EngineMain.main
 
 fun main(args: Array<String>) = main(args)
 
-data class Version(val version : String)
+data class Version(val version: String)
 
 fun Application.applicationModule() {
   routing {
     get("/") {
       call.respondText("Hello, world!")
     }
-    get("/version") {
-      call.respond(Version("0.0.0"))
-    }
+    VersionController().apply { routes() }
   }
   install(ContentNegotiation) {
     jackson()

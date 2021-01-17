@@ -6,7 +6,8 @@ plugins {
 }
 
 group = "com.painkiller"
-version = "0.0.0"
+val major = 0
+val minor = 0
 
 repositories {
   jcenter()
@@ -23,6 +24,7 @@ dependencies {
   testImplementation("io.ktor:ktor-client-apache:1.4.0")
   testImplementation("io.ktor:ktor-client-core:1.4.0")
   testImplementation("io.ktor:ktor-client-jackson:1.4.0")
+  testImplementation("org.hamcrest:hamcrest-junit:+")
   testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:+")
   testImplementation("org.junit.jupiter:junit-jupiter-api:5.6.0")
   testImplementation(kotlin("test-junit5"))
@@ -35,4 +37,15 @@ tasks.test {
 
 tasks.withType<KotlinCompile>() {
   kotlinOptions.jvmTarget = "11"
+}
+
+tasks.named("processResources") {
+  doFirst {
+    ProcessBuilder("git rev-list --count HEAD".split(" "))
+      .start()
+      .run {
+        val patch = inputStream.bufferedReader().readText().trim()
+        file("src/main/resources/version.properties").writeText("version=$major.$minor.$patch")
+      }
+  }
 }
