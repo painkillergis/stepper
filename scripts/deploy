@@ -1,4 +1,5 @@
 #!/bin/sh
+./gradlew shadowJar
 docker build -t painkillergis/ktor-starter:`scripts/versionByDepth` .
 docker push painkillergis/ktor-starter:`scripts/versionByDepth`
 cat <<EOF | kubectl apply -f -
