@@ -7,7 +7,7 @@ plugins {
 }
 
 application {
-  mainClassName = "com.painkiller.recommendations.ServerKt"
+  mainClassName = "com.painkiller.recommendations.ApplicationKt"
 }
 
 group = "com.painkiller"
