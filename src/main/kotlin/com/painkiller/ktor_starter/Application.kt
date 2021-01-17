@@ -1,9 +1,8 @@
-package com.painkiller.ktor-starter
+package com.painkiller.ktor_starter
 
 import io.ktor.application.*
 import io.ktor.features.*
 import io.ktor.jackson.*
-import io.ktor.response.*
 import io.ktor.routing.*
 import io.ktor.server.netty.EngineMain.main
 

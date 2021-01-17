@@ -1,9 +1,8 @@
-package com.painkiller.ktor-starter
+package com.painkiller.ktor_starter
 
 import io.ktor.client.*
 import io.ktor.client.features.*
 import io.ktor.client.features.json.*
-import io.ktor.client.request.*
 import io.ktor.http.*
 import org.junit.jupiter.api.extension.BeforeEachCallback
 import org.junit.jupiter.api.extension.ExtensionContext

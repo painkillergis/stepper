@@ -1,4 +1,4 @@
-package com.painkiller.ktor-starter
+package com.painkiller.ktor_starter
 
 import io.ktor.client.*
 import io.ktor.client.request.*
