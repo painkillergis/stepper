@@ -18,6 +18,7 @@ repositories {
 dependencies {
   implementation("io.ktor:ktor-html-builder:1.4.0")
   implementation("io.ktor:ktor-server-netty:1.4.0")
+  implementation("org.slf4j:slf4j-simple:+")
   testImplementation("io.ktor:ktor-client-apache:1.4.0")
   testImplementation("io.ktor:ktor-client-core:1.4.0")
   testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:+")
