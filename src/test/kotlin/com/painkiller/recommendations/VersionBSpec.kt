@@ -23,7 +23,7 @@ class VersionBSpec {
 
   @Test
   fun `get _version`() {
-    val version = runBlocking { httpClient.get<Version>("http://localhost:8080/version") }
+    val version = runBlocking { httpClient.get<Version>("/version") }
 
     assertEquals(Version("0.0.0"), version)
   }

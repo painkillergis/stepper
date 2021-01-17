@@ -21,7 +21,7 @@ class HelloWorldBSpec {
 
   @Test
   fun `get hello world returns greetings`() {
-    val bytes = runBlocking { httpClient.get<ByteArray>("http://localhost:8080/") }
+    val bytes = runBlocking { httpClient.get<ByteArray>("/") }
 
     assertEquals("Hello, world!", String(bytes))
   }
