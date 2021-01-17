@@ -1,1 +1,1 @@
-rootProject.name = "recommendations"
+rootProject.name = "ktor-starter"

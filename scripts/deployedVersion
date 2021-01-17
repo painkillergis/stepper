@@ -1,1 +1,1 @@
-curl -sL painkiller.arctair.com/recommendations/version | jq '.version' -r || echo unknown
+curl -sL painkiller.arctair.com/ktor-starter/version | jq '.version' -r || echo unknown

@@ -1,4 +1,4 @@
-package com.painkiller.recommendations
+package com.painkiller.ktor-starter
 
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*

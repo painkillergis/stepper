@@ -1,4 +1,4 @@
-package com.painkiller.recommendations
+package com.painkiller.ktor-starter
 
 import io.ktor.client.*
 import io.ktor.client.features.*
