@@ -18,14 +18,18 @@ import kotlin.test.Test
 class VersionBSpec {
 
   @TestHttpClient
-  lateinit var httpClient : HttpClient
+  lateinit var httpClient: HttpClient
 
-  data class Version(val version : String)
+  data class Version(
+    val sha: String,
+    val version: String,
+  )
 
   @Test
   fun `get _version`() {
     val version = runBlocking { httpClient.get<Version>("/version") }
 
+    assertThat(version.sha, matchesPattern("[0-9a-f]{40}"))
     assertThat(version.version, matchesPattern("\\d+\\.\\d+\\.\\d+"))
   }
 }

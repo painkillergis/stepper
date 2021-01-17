@@ -9,8 +9,6 @@ import io.ktor.server.netty.EngineMain.main
 
 fun main(args: Array<String>) = main(args)
 
-data class Version(val version: String)
-
 fun Application.applicationModule() {
   routing {
     get("/") {

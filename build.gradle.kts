@@ -41,11 +41,11 @@ tasks.withType<KotlinCompile>() {
 
 tasks.named("processResources") {
   doFirst {
-    ProcessBuilder("git rev-list --count HEAD".split(" "))
+    ProcessBuilder("sh", "-c", "git rev-parse HEAD ; git rev-list --count HEAD")
       .start()
       .run {
-        val patch = inputStream.bufferedReader().readText().trim()
-        file("src/main/resources/version.properties").writeText("version=$major.$minor.$patch")
+        val (sha, patch) = inputStream.bufferedReader().readText().split("\n")
+        file("src/main/resources/version.properties").writeText("sha=$sha\nversion=$major.$minor.$patch")
       }
   }
 }
