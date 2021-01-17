@@ -14,15 +14,17 @@ import kotlin.test.assertEquals
   ExtendWith(StartApplication::class),
   ExtendWith(TestHttpClientProvider::class),
 )
-class HelloWorldBSpec {
+class VersionBSpec {
 
   @TestHttpClient
   lateinit var httpClient : HttpClient
 
-  @Test
-  fun `get hello world returns greetings`() {
-    val bytes = runBlocking { httpClient.get<ByteArray>("http://localhost:8080/") }
+  data class Version(val version : String)
 
-    assertEquals("Hello, world!", String(bytes))
+  @Test
+  fun `get _version`() {
+    val version = runBlocking { httpClient.get<Version>("http://localhost:8080/version") }
+
+    assertEquals(Version("0.0.0"), version)
   }
 }

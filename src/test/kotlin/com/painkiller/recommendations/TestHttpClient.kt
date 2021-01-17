@@ -2,6 +2,7 @@ package com.painkiller.recommendations
 
 import io.ktor.client.*
 import io.ktor.client.features.*
+import io.ktor.client.features.json.*
 import io.ktor.client.request.*
 import org.junit.jupiter.api.extension.BeforeEachCallback
 import org.junit.jupiter.api.extension.ExtensionContext
@@ -11,9 +12,7 @@ annotation class TestHttpClient
 
 object TestHttpClientProvider : BeforeEachCallback, ExtensionContext.Store.CloseableResource {
   private val httpClient = HttpClient {
-    defaultRequest {
-      url("http://localhost:8080")
-    }
+    install(JsonFeature)
   }
 
   override fun beforeEach(context: ExtensionContext?) {
