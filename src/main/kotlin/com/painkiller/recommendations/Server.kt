@@ -11,9 +11,6 @@ fun main(args: Array<String>) = main(args)
 
 fun Application.applicationModule() {
   routing {
-    get("/") {
-      call.respondText("Hello, world!")
-    }
     VersionController().apply { routes() }
   }
   install(ContentNegotiation) {
