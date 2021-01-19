@@ -1,1 +1,2 @@
-curl -sL painkiller.arctair.com/ktor-starter/version | jq '.version' -r 2>/dev/null || echo unknown
+#!/bin/sh
+curl -sL `scripts/baseUrl`/version | jq '.version' -r 2>/dev/null || echo unknown
