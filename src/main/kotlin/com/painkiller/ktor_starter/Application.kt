@@ -8,12 +8,9 @@ import io.ktor.server.netty.EngineMain.main
 fun main(args: Array<String>) = main(args)
 
 fun Application.applicationModule() {
-  val controllers = listOf(
-    VersionController(
-      VersionService(),
-    ),
+  versionController(
+    VersionService(),
   )
-  controllers.forEach { it.apply { module() } }
   globalModules()
 }
 

@@ -5,7 +5,6 @@ import com.fasterxml.jackson.module.kotlin.readValue
 import io.ktor.http.*
 import io.ktor.server.testing.*
 import io.mockk.every
-import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
 import org.junit.jupiter.api.Test
@@ -18,13 +17,10 @@ internal class VersionControllerSpec {
   @MockK
   lateinit var versionService: VersionService
 
-  @InjectMockKs
-  lateinit var versionController : VersionController
-
   @Test
   fun `get version`() {
     withTestApplication(moduleFunction = {
-      versionController.apply { module() }
+      versionController(versionService)
       globalModules()
     }) {
       val givenVersion = Version("the sha", "the version")
