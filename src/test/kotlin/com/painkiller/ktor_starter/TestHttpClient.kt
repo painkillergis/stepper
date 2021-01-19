@@ -6,7 +6,6 @@ import io.ktor.client.features.json.*
 import io.ktor.http.*
 import org.junit.jupiter.api.extension.BeforeEachCallback
 import org.junit.jupiter.api.extension.ExtensionContext
-import java.lang.RuntimeException
 
 @Target(AnnotationTarget.FIELD)
 annotation class TestHttpClient
