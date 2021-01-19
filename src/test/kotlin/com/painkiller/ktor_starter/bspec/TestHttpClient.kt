@@ -1,4 +1,4 @@
-package com.painkiller.ktor_starter
+package com.painkiller.ktor_starter.bspec
 
 import io.ktor.client.*
 import io.ktor.client.features.*
