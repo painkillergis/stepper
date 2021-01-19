@@ -41,3 +41,5 @@ echo waiting for deployment `scripts/versionByDepth` \(currently `scripts/deploy
 until [ `scripts/versionByDepth` == `scripts/deployedVersion` ] ; do
   sleep 1
 done
+echo running tests against deployment
+baseUrl=http://painkiller.arctair.com/ktor-starter ./gradlew cleanTest test
