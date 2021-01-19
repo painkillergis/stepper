@@ -4,10 +4,9 @@ This starter gifts you a runnable barebones Kotlin Ktor application with tests.
 `./eject`
 Ejecting renames packages, artifacts, services, deployments, and the project name from ktor-starter to the name of this directory.
 ## Run the tests
-### From command line
-`./gradlew test`
-### From IntelliJ
-Right click src/test directory and click Run
+`./gradlew cleanTest test`
+### Against a deployment
+`baseUrl=http://painkiller.arctair.com/ktor-starter ./gradlew cleanTest test`
 ## Deploy
 Deployment scripts to Kubernetes are included in the scripts/ directory.
 `scripts/deploy`
