@@ -42,4 +42,4 @@ until [ `scripts/versionByDepth` == `scripts/deployedVersion` ] ; do
   sleep 1
 done
 echo running tests against deployment
-baseUrl=`scripts/baseUrl` ./gradlew cleanTest test -Dbspec
+baseUrl=`scripts/baseUrl` ./gradlew cleanTest test

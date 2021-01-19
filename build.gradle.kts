@@ -40,7 +40,7 @@ dependencies {
 
 tasks.test {
   useJUnitPlatform()
-  if (System.getProperty("bspec") != null) {
+  if (System.getProperty("baseUrl") != null || System.getProperty("bspec") != null) {
     include("**/bspec/")
   }
 }
