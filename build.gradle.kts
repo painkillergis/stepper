@@ -29,6 +29,8 @@ dependencies {
   testImplementation("io.ktor:ktor-client-apache:1.4.0")
   testImplementation("io.ktor:ktor-client-core:1.4.0")
   testImplementation("io.ktor:ktor-client-jackson:1.4.0")
+  testImplementation("io.ktor:ktor-server-test-host:1.4.0")
+  testImplementation("io.mockk:mockk:+")
   testImplementation("org.hamcrest:hamcrest-junit:+")
   testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:+")
   testImplementation("org.junit.jupiter:junit-jupiter-api:5.6.0")
