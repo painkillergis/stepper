@@ -40,6 +40,9 @@ dependencies {
 
 tasks.test {
   useJUnitPlatform()
+  if (System.getProperty("bspec") != null) {
+    include("**/bspec/")
+  }
 }
 
 tasks.withType<KotlinCompile>() {

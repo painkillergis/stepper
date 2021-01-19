@@ -6,7 +6,7 @@ Ejecting renames packages, artifacts, services, deployments, and the project nam
 ## Run the tests
 `./gradlew cleanTest test`
 ### Against a deployment
-`baseUrl=http://painkiller.arctair.com/ktor-starter ./gradlew cleanTest test`
+`baseUrl=http://painkiller.arctair.com/ktor-starter ./gradlew cleanTest test -Dbspec`
 ## Deploy
 Deployment scripts to Kubernetes are included in the scripts/ directory.
 `scripts/deploy`
