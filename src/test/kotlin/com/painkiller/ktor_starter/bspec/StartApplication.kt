@@ -10,22 +10,21 @@ object StartApplication : BeforeAllCallback, ExtensionContext.Store.CloseableRes
   var server: NettyApplicationEngine? = null
 
   override fun beforeAll(context: ExtensionContext?) {
-    if (server == null) {
-      server = embeddedServer(
-        Netty,
-        applicationEngineEnvironment {
-          module {
-            applicationModule()
-          }
-          connector {
-            port = 8080
-          }
-        },
-      ).start()
-    }
+    if (System.getenv("baseUrl") != null || server != null) return
+    server = embeddedServer(
+      Netty,
+      applicationEngineEnvironment {
+        module {
+          applicationModule()
+        }
+        connector {
+          port = 8080
+        }
+      },
+    ).start()
   }
 
   override fun close() {
-    server!!.stop(1000, 10000)
+    server?.stop(1000, 10000)
   }
 }
