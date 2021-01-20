@@ -1,0 +1,15 @@
+# This is a Gradle generated file for dependency locking.
+# Manual edits can break the build and are not advised.
+# This file is expected to be part of source control.
+io.ktor:ktor-html-builder-kotlinMultiplatform:1.5.0
+io.ktor:ktor-html-builder:1.5.0
+io.ktor:ktor-jackson-kotlinMultiplatform:1.5.0
+io.ktor:ktor-jackson:1.5.0
+io.ktor:ktor-server-core-kotlinMultiplatform:1.5.0
+io.ktor:ktor-server-netty-kotlinMultiplatform:1.5.0
+io.ktor:ktor-server-netty:1.5.0
+org.jetbrains.kotlin:kotlin-stdlib-common:1.4.21-2
+org.jetbrains.kotlin:kotlin-stdlib:1.4.21-2
+org.jetbrains:annotations:13.0
+org.slf4j:slf4j-api:1.7.30
+org.slf4j:slf4j-simple:1.7.30
