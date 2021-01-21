@@ -130,7 +130,7 @@ val waitForDeployment by tasks.registering {
     val expectedVersion = getVersion()
     var actualVersion = getDeploymentVersion()
     if (expectedVersion != actualVersion) {
-      println("Waiting for version $expectedVersion (currently $actualVersion)")
+      println("Waiting for version $expectedVersion (currently ${actualVersion ?: "unavailable"})")
       do {
         actualVersion = getDeploymentVersion()
       } while (expectedVersion != actualVersion)
