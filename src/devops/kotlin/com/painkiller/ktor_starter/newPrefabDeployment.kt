@@ -1,11 +1,12 @@
 package com.painkiller.ktor_starter
 
 import com.fkorotkov.kubernetes.apps.metadata
+import com.fkorotkov.kubernetes.apps.newDeployment
 import com.fkorotkov.kubernetes.apps.selector
 import com.fkorotkov.kubernetes.apps.spec
 
-class Deployment(deploymentName: String, podTemplateSpec: PodTemplateSpec) : io.fabric8.kubernetes.api.model.apps.Deployment() {
-  init {
+fun newPrefabDeployment(deploymentName: String, podTemplateSpec: PodTemplateSpec) =
+  newDeployment {
     metadata {
       name = deploymentName
       labels = mapOf("app" to deploymentName)
@@ -18,4 +19,3 @@ class Deployment(deploymentName: String, podTemplateSpec: PodTemplateSpec) : io.
       template = podTemplateSpec
     }
   }
-}
