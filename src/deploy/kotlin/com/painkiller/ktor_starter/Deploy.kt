@@ -3,18 +3,18 @@ package com.painkiller.ktor_starter
 import io.fabric8.kubernetes.client.DefaultKubernetesClient
 
 fun main(args: Array<String>) {
-  val (version) = args
+  val (group, name, version) = args
   DefaultKubernetesClient().use {
     it
       .inNamespace("default")
       .apply {
-        services().createOrReplace(Service("ktor-starter"))
+        services().createOrReplace(Service(name))
         apps().deployments().createOrReplace(
           Deployment(
-            "ktor-starter",
+            name,
             PodTemplateSpec(
-              "painkillergis",
-              "ktor-starter",
+              group,
+              name,
               version,
             ),
           ),

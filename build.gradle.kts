@@ -122,7 +122,7 @@ kotlin.sourceSets {
 task("deploy", JavaExec::class) {
   main = "com.painkiller.ktor_starter.DeployKt"
   classpath = sourceSets["deploy"].runtimeClasspath
-  args = listOf(getVersion())
+  args = listOf("painkillergis", "ktor-starter", getVersion())
 }
 
 val waitForDeployment by tasks.registering {
