@@ -7,7 +7,10 @@ Ejecting renames packages, artifacts, services, deployments, and the project nam
 `./gradlew cleanTest test`
 ### Against a deployment
 `baseUrl=http://painkiller.arctair.com/ktor-starter ./gradlew cleanTest test`
-## Deploy
-Deployment scripts to Kubernetes are included in the scripts/ directory.
-`scripts/deploy`
-The deploy script builds and pushes a new Docker image, creates or updates your Kubernetes service and deployment, and waits for changes to be visible at the deployment URL.
+## Build, deploy, verify
+`scripts/ci`
+The ci script executes these steps:
+1. Build jar file
+1. Build and push Docker image
+1. Create or update Kubernetes service and deployment
+1. Run blackbox tests against deployment baseUrl
