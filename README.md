@@ -12,5 +12,6 @@ Ejecting renames packages, artifacts, services, deployments, and the project nam
 The ci script executes these steps:
 1. Build jar file
 1. Build and push Docker image
-1. Create or update Kubernetes service and deployment
-1. Run blackbox tests against deployment baseUrl
+1. Create or update dark (non-production) Kubernetes service and deployment
+1. Run blackbox tests against dark deployment baseUrl
+1. Swap dark deployment and live deployment
