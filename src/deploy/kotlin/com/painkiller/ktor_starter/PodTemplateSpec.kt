@@ -5,17 +5,17 @@ import com.fkorotkov.kubernetes.newContainer
 import com.fkorotkov.kubernetes.newContainerPort
 import com.fkorotkov.kubernetes.spec
 
-class PodTemplateSpec(val group: String, val name: String, val version: String) :
+class PodTemplateSpec(val group: String, val _name: String, val version: String) :
   io.fabric8.kubernetes.api.model.PodTemplateSpec() {
   init {
     metadata {
-      labels = mapOf("app" to name)
+      labels = mapOf("app" to _name)
     }
     spec {
       containers = listOf(
         newContainer {
-          name = name
-          image = "$group/$name:$version"
+          name = _name
+          image = "$group/$_name:$version"
           ports = listOf(
             newContainerPort {
               containerPort = 8080
