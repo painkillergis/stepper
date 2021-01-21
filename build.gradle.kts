@@ -130,11 +130,17 @@ val waitForDeployment by tasks.registering {
     val expectedVersion = getVersion()
     var actualVersion = getDeploymentVersion()
     if (expectedVersion != actualVersion) {
-      println("Waiting for version $expectedVersion (currently ${actualVersion ?: "unavailable"})")
+      println("Waiting for version $expectedVersion (currently $actualVersion)")
       do {
         actualVersion = getDeploymentVersion()
       } while (expectedVersion != actualVersion)
     }
+  }
+}
+
+val getDeploymentVersion by tasks.registering {
+  doLast {
+    println(getDeploymentVersion())
   }
 }
 
@@ -144,7 +150,7 @@ fun getDeploymentVersion(): String? {
       .toURL()
       .readBytes()
       .let { groovy.json.JsonSlurper().parse(it) as? Map<String, String> }
-      ?.get("version")
+      ?.get("version") ?: "unavailable"
   } catch (ignored: Exception) {
     null
   }
