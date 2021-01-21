@@ -11,14 +11,14 @@ fun main(args: Array<String>) {
         val isRed = services().withName(name).get()?.isRed() ?: false
 
         services().createOrReplace(
-          Service(
+          newPrefabService(
             name,
             "$name-${if (isRed) "black" else "red"}",
           ),
         )
 
         services().createOrReplace(
-          Service(
+          newPrefabService(
             "$name-dark",
             "$name-${if (isRed) "red" else "black"}",
           ),

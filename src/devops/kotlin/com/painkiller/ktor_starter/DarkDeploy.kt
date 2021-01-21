@@ -12,7 +12,7 @@ fun main(args: Array<String>) {
         val darkDeploymentName = "$name-${if (isRed) "black" else "red"}"
 
         services().createOrReplace(
-          Service(
+          newPrefabService(
             "$name-dark",
             darkDeploymentName,
           ),
