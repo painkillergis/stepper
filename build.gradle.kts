@@ -115,6 +115,7 @@ kotlin.sourceSets {
       implementation("io.fabric8:kubernetes-client:+")
       implementation("org.jetbrains.kotlin:kotlin-reflect:+")
       implementation("org.jetbrains.kotlin:kotlin-stdlib:+")
+      implementation("org.slf4j:slf4j-simple:+")
     }
   }
 }
