@@ -8,7 +8,7 @@ fun main(args: Array<String>) {
     it
       .inNamespace("default")
       .apply {
-        services().createOrReplace(Service())
+        services().createOrReplace(Service("ktor-starter"))
         apps().deployments().createOrReplace(
           Deployment(
             "ktor-starter",

@@ -4,10 +4,10 @@ import com.fkorotkov.kubernetes.metadata
 import com.fkorotkov.kubernetes.spec
 import io.fabric8.kubernetes.api.model.ServicePortBuilder
 
-class Service() : io.fabric8.kubernetes.api.model.Service() {
+class Service(val _name: String) : io.fabric8.kubernetes.api.model.Service() {
   init {
     metadata {
-      name = "ktor-starter-deploy-demo"
+      name = _name
     }
     spec {
       type = "NodePort"
@@ -17,7 +17,7 @@ class Service() : io.fabric8.kubernetes.api.model.Service() {
           .withNewTargetPort(8080)
           .build()
       )
-      selector = mapOf("app" to "ktor-starter-deploy-demo")
+      selector = mapOf("app" to _name)
     }
   }
 }
