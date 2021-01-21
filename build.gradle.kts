@@ -95,3 +95,26 @@ configurations.all {
       })
   }
 }
+
+sourceSets {
+  val deploy by creating {
+    java.srcDir("src/deploy/kotlin")
+  }
+}
+
+kotlin.sourceSets {
+  val deploy by getting {
+    dependencies {
+      implementation("com.fkorotkov:kubernetes-dsl:+")
+      implementation("io.fabric8:kubernetes-client:+")
+      implementation("org.jetbrains.kotlin:kotlin-reflect:+")
+      implementation("org.jetbrains.kotlin:kotlin-stdlib:+")
+    }
+  }
+}
+
+task("deploy", JavaExec::class) {
+  main = "com.painkiller.ktor_starter.DeployKt"
+  classpath = sourceSets["deploy"].runtimeClasspath
+  args = listOf(getVersion())
+}
