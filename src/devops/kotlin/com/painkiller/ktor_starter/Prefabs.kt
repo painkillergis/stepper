@@ -7,6 +7,9 @@ import com.fkorotkov.kubernetes.apps.selector
 import com.fkorotkov.kubernetes.apps.spec
 import io.fabric8.kubernetes.api.model.IntOrString
 import io.fabric8.kubernetes.api.model.PodTemplateSpec
+import io.fabric8.kubernetes.client.DefaultKubernetesClient
+
+fun newPrefabClient() = DefaultKubernetesClient().inNamespace("default")
 
 fun newPrefabService(serviceName: String, deploymentName: String) =
   newService {
