@@ -128,17 +128,17 @@ task("deploy", JavaExec::class) {
 val waitForDeployment by tasks.registering {
   doLast {
     val expectedVersion = getVersion()
-    var actualVersion = getRemoteVersion()
+    var actualVersion = getDeploymentVersion()
     if (expectedVersion != actualVersion) {
       println("Waiting for version $expectedVersion (currently $actualVersion)")
       do {
-        actualVersion = getRemoteVersion()
+        actualVersion = getDeploymentVersion()
       } while (expectedVersion != actualVersion)
     }
   }
 }
 
-fun getRemoteVersion(): String? {
+fun getDeploymentVersion(): String? {
   return try {
     uri("http://painkiller.arctair.com/ktor-starter/version")
       .toURL()
