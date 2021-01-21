@@ -1,8 +1,4 @@
 #!/bin/sh
-./gradlew clean shadowJar docker dockerPush deploy
-echo waiting for deployment `scripts/versionByDepth` \(currently `scripts/deployedVersion`\)
-until [ `scripts/versionByDepth` == `scripts/deployedVersion` ] ; do
-  sleep 1
-done
+./gradlew clean shadowJar docker dockerPush deploy waitForDeployment
 echo running tests against deployment
-baseUrl=`scripts/baseUrl` ./gradlew cleanTest test
+baseUrl=http://painkiller.arctair.com/ktor-starter ./gradlew cleanTest test

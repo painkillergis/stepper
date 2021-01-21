@@ -1,2 +1,0 @@
-#!/bin/sh
-curl -sL `scripts/baseUrl`/version | jq '.version' -r 2>/dev/null || echo unknown

@@ -124,3 +124,24 @@ task("deploy", JavaExec::class) {
   classpath = sourceSets["deploy"].runtimeClasspath
   args = listOf(getVersion())
 }
+
+val waitForDeployment by tasks.registering {
+  doLast {
+    val expectedVersion = getVersion()
+    var actualVersion = getRemoteVersion()
+    if (expectedVersion != actualVersion) {
+      println("Waiting for version $expectedVersion (currently $actualVersion)")
+      do {
+        actualVersion = getRemoteVersion()
+      } while (expectedVersion != actualVersion)
+    }
+  }
+}
+
+fun getRemoteVersion(): String? {
+  return uri("http://painkiller.arctair.com/ktor-starter/version")
+    .toURL()
+    .readBytes()
+    .let { groovy.json.JsonSlurper().parse(it) as? Map<String, String> }
+    ?.get("version")
+}

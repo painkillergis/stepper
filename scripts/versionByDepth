@@ -1,2 +1,0 @@
-#!/bin/sh
-echo v1.0.`git rev-list --count HEAD`
