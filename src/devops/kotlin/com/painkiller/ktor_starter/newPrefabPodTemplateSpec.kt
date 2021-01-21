@@ -1,13 +1,9 @@
 package com.painkiller.ktor_starter
 
-import com.fkorotkov.kubernetes.metadata
-import com.fkorotkov.kubernetes.newContainer
-import com.fkorotkov.kubernetes.newContainerPort
-import com.fkorotkov.kubernetes.spec
+import com.fkorotkov.kubernetes.*
 
-class PodTemplateSpec(val group: String, val imageName: String, val deploymentName: String, val version: String) :
-  io.fabric8.kubernetes.api.model.PodTemplateSpec() {
-  init {
+fun newPrefabPodTemplateSpec(group: String, imageName: String, deploymentName: String, version: String) =
+  newPodTemplateSpec {
     metadata {
       labels = mapOf("app" to deploymentName)
     }
@@ -25,4 +21,3 @@ class PodTemplateSpec(val group: String, val imageName: String, val deploymentNa
       )
     }
   }
-}

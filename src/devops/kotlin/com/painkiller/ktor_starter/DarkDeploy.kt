@@ -21,7 +21,7 @@ fun main(args: Array<String>) {
         apps().deployments().createOrReplace(
           newPrefabDeployment(
             darkDeploymentName,
-            PodTemplateSpec(
+            newPrefabPodTemplateSpec(
               group,
               name,
               darkDeploymentName,
