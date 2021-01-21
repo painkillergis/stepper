@@ -15,11 +15,11 @@ group = "com.painkiller"
 val major = 1
 val minor = 0
 
-fun safeName() : String {
+fun safeName(): String {
   return rootProject.name.replace("-", "_")
 }
 
-fun packageBase() : String {
+fun packageBase(): String {
   return "com.painkiller.${safeName()}"
 }
 
@@ -144,10 +144,10 @@ fun getDarkVersion(): String? {
       .toURL()
       .readBytes()
       .let { groovy.json.JsonSlurper().parse(it) as? Map<String, String> }
-      ?.get("version") ?: "unavailable"
+      ?.get("version")
   } catch (ignored: Exception) {
     null
-  }
+  } ?: "unavailable"
 }
 
 val switchBackend by tasks.registering(JavaExec::class) {
