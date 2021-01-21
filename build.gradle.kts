@@ -139,9 +139,13 @@ val waitForDeployment by tasks.registering {
 }
 
 fun getRemoteVersion(): String? {
-  return uri("http://painkiller.arctair.com/ktor-starter/version")
-    .toURL()
-    .readBytes()
-    .let { groovy.json.JsonSlurper().parse(it) as? Map<String, String> }
-    ?.get("version")
+  return try {
+    uri("http://painkiller.arctair.com/ktor-starter/version")
+      .toURL()
+      .readBytes()
+      .let { groovy.json.JsonSlurper().parse(it) as? Map<String, String> }
+      ?.get("version")
+  } catch (ignored : Exception) {
+    null
+  }
 }
