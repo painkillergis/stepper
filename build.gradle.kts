@@ -20,7 +20,7 @@ fun safeName() : String {
 }
 
 fun packageBase() : String {
-  return "$group.${safeName()}"
+  return "com.painkiller.${safeName()}"
 }
 
 repositories {
