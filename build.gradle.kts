@@ -103,13 +103,13 @@ docker {
 }
 
 sourceSets {
-  val deploy by creating {
+  val devops by creating {
     java.srcDir("src/deploy/kotlin")
   }
 }
 
 kotlin.sourceSets {
-  val deploy by getting {
+  val devops by getting {
     dependencies {
       implementation("com.fkorotkov:kubernetes-dsl:+")
       implementation("io.fabric8:kubernetes-client:+")
@@ -122,7 +122,7 @@ kotlin.sourceSets {
 
 task("deploy", JavaExec::class) {
   main = "com.painkiller.ktor_starter.DeployKt"
-  classpath = sourceSets["deploy"].runtimeClasspath
+  classpath = sourceSets["devops"].runtimeClasspath
   args = listOf("painkillergis", "ktor-starter", getVersion())
 }
 
