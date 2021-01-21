@@ -47,6 +47,15 @@ tasks.test {
   }
 }
 
+sourceSets.create("devops").java.srcDir("src/deploy/kotlin")
+kotlin.sourceSets["devops"].dependencies {
+  implementation("com.fkorotkov:kubernetes-dsl:+")
+  implementation("io.fabric8:kubernetes-client:+")
+  implementation("org.jetbrains.kotlin:kotlin-reflect:+")
+  implementation("org.jetbrains.kotlin:kotlin-stdlib:+")
+  implementation("org.slf4j:slf4j-simple:+")
+}
+
 tasks.withType<KotlinCompile>() {
   kotlinOptions.jvmTarget = "11"
 }
@@ -102,24 +111,6 @@ docker {
   files("build/libs/ktor-starter.jar")
 }
 
-sourceSets {
-  val devops by creating {
-    java.srcDir("src/deploy/kotlin")
-  }
-}
-
-kotlin.sourceSets {
-  val devops by getting {
-    dependencies {
-      implementation("com.fkorotkov:kubernetes-dsl:+")
-      implementation("io.fabric8:kubernetes-client:+")
-      implementation("org.jetbrains.kotlin:kotlin-reflect:+")
-      implementation("org.jetbrains.kotlin:kotlin-stdlib:+")
-      implementation("org.slf4j:slf4j-simple:+")
-    }
-  }
-}
-
 task("deploy", JavaExec::class) {
   main = "com.painkiller.ktor_starter.DeployKt"
   classpath = sourceSets["devops"].runtimeClasspath
@@ -156,4 +147,3 @@ fun getDeploymentVersion(): String? {
     null
   }
 }
-
