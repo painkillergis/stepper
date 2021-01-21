@@ -52,13 +52,24 @@ tasks.withType<KotlinCompile>() {
 
 tasks.named("processResources") {
   doFirst {
-    ProcessBuilder("sh", "-c", "git rev-parse HEAD ; git rev-list --count HEAD")
-      .start()
-      .run {
-        val (sha, patch) = inputStream.bufferedReader().readText().split("\n")
-        file("src/main/resources/version.properties").writeText("sha=$sha\nversion=v$major.$minor.$patch")
-      }
+    file("src/main/resources/version.properties")
+      .writeText("sha=${getSha()}\nversion=${getVersion()}")
   }
+}
+
+fun getSha(): String {
+  return ProcessBuilder("sh", "-c", "git rev-parse HEAD")
+    .start()
+    .apply { waitFor() }
+    .let { it.inputStream.bufferedReader().readText().trim() }
+}
+
+fun getVersion(): String {
+  return ProcessBuilder("sh", "-c", "git rev-list --count HEAD")
+    .start()
+    .apply { waitFor() }
+    .let { it.inputStream.bufferedReader().readText().trim() }
+    .let { "v$major.$minor.$it" }
 }
 
 configurations.all {
