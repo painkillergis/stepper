@@ -1,8 +1,5 @@
 #!/bin/sh
-./gradlew clean shadowJar
-docker build -t painkillergis/ktor-starter:`scripts/versionByDepth` .
-docker push painkillergis/ktor-starter:`scripts/versionByDepth`
-./gradlew deploy
+./gradlew clean shadowJar docker dockerPush deploy
 echo waiting for deployment `scripts/versionByDepth` \(currently `scripts/deployedVersion`\)
 until [ `scripts/versionByDepth` == `scripts/deployedVersion` ] ; do
   sleep 1
