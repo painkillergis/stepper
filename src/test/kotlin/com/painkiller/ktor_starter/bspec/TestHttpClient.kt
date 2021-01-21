@@ -20,9 +20,9 @@ object TestHttpClientProvider : BeforeEachCallback, ExtensionContext.Store.Close
     val baseUrl = System.getenv("baseUrl")
     if (baseUrl != null) {
       val (protocolString, hostname, basePath) = Regex("(?<protocol>\\w+)://(?<hostname>[\\w.-]+(:\\d+)?)(?<basePath>.*)")
-        .matchEntire(baseUrl)!!
-        .groupValues
-        .slice(listOf(1, 2, 4))
+        .matchEntire(baseUrl)
+        ?.groupValues
+        ?.slice(listOf(1, 2, 4)) ?: throw Error("baseUrl '$baseUrl' is malformed")
       protocol = URLProtocol.createOrDefault(protocolString)
       this.hostname = hostname
       this.basePath = basePath
