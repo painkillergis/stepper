@@ -145,7 +145,8 @@ fun getDeploymentVersion(): String? {
       .readBytes()
       .let { groovy.json.JsonSlurper().parse(it) as? Map<String, String> }
       ?.get("version")
-  } catch (ignored : Exception) {
+  } catch (ignored: Exception) {
     null
   }
 }
+

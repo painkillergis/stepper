@@ -1,4 +1,0 @@
-#!/bin/sh
-./gradlew clean shadowJar docker dockerPush deploy waitForDeployment
-echo running tests against deployment
-baseUrl=http://painkiller.arctair.com/ktor-starter ./gradlew cleanTest test
