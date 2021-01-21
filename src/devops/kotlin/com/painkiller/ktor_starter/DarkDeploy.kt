@@ -8,13 +8,23 @@ fun main(args: Array<String>) {
     it
       .inNamespace("default")
       .apply {
-        services().createOrReplace(Service(name))
+        val isRed = services().withName(name).get()?.isRed() ?: false
+        val darkDeploymentName = "$name-${if (isRed) "black" else "red"}"
+
+        services().createOrReplace(
+          Service(
+            "$name-dark",
+            darkDeploymentName,
+          ),
+        )
+
         apps().deployments().createOrReplace(
           Deployment(
-            name,
+            darkDeploymentName,
             PodTemplateSpec(
               group,
               name,
+              darkDeploymentName,
               version,
             ),
           ),

@@ -111,34 +111,28 @@ docker {
   files("build/libs/ktor-starter.jar")
 }
 
-task("deploy", JavaExec::class) {
-  main = "com.painkiller.ktor_starter.DeployKt"
+val darkDeploy by tasks.registering(JavaExec::class) {
+  main = "com.painkiller.ktor_starter.DarkDeployKt"
   classpath = sourceSets["devops"].runtimeClasspath
-  args = listOf("painkillergis", "ktor-starter", getVersion())
+  args = listOf("painkillergis", rootProject.name, getVersion())
 }
 
-val waitForDeployment by tasks.registering {
+val waitForDarkDeployment by tasks.registering {
   doLast {
     val expectedVersion = getVersion()
-    var actualVersion = getDeploymentVersion()
+    var actualVersion = getDarkVersion()
     if (expectedVersion != actualVersion) {
       println("Waiting for version $expectedVersion (currently $actualVersion)")
       do {
-        actualVersion = getDeploymentVersion()
+        actualVersion = getDarkVersion()
       } while (expectedVersion != actualVersion)
     }
   }
 }
 
-val getDeploymentVersion by tasks.registering {
-  doLast {
-    println(getDeploymentVersion())
-  }
-}
-
-fun getDeploymentVersion(): String? {
+fun getDarkVersion(): String? {
   return try {
-    uri("http://painkiller.arctair.com/ktor-starter/version")
+    uri("http://painkiller.arctair.com/ktor-starter-dark/version")
       .toURL()
       .readBytes()
       .let { groovy.json.JsonSlurper().parse(it) as? Map<String, String> }
@@ -146,4 +140,10 @@ fun getDeploymentVersion(): String? {
   } catch (ignored: Exception) {
     null
   }
+}
+
+val switchBackend by tasks.registering(JavaExec::class) {
+  main = "com.painkiller.ktor_starter.SwitchBackendKt"
+  classpath = sourceSets["devops"].runtimeClasspath
+  args = listOf(rootProject.name)
 }

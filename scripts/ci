@@ -1,3 +1,3 @@
 #!/bin/sh
-baseUrl=http://painkiller.arctair.com/ktor-starter ./gradlew \
-  clean shadowJar docker dockerPush deploy waitForDeployment cleanTest test
+baseUrl=http://painkiller.arctair.com/ktor-starter-dark ./gradlew \
+  clean shadowJar docker dockerPush darkDeploy waitForDarkDeployment cleanTest test switchBackend
