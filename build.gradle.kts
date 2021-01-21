@@ -7,17 +7,21 @@ plugins {
   id("com.palantir.docker") version "0.25.0"
 }
 
-fun safeName() : String {
-  return rootProject.name.replace("-", "_")
-}
-
 application {
-  mainClassName = "com.painkiller.${safeName()}.ApplicationKt"
+  mainClassName = "${packageBase()}.ApplicationKt"
 }
 
 group = "com.painkiller"
 val major = 1
 val minor = 0
+
+fun safeName() : String {
+  return rootProject.name.replace("-", "_")
+}
+
+fun packageBase() : String {
+  return "$group.${safeName()}"
+}
 
 repositories {
   jcenter()
@@ -116,7 +120,7 @@ docker {
 }
 
 val darkDeploy by tasks.registering(JavaExec::class) {
-  main = "$group.${safeName()}.DarkDeployKt"
+  main = "${packageBase()}.DarkDeployKt"
   classpath = sourceSets["devops"].runtimeClasspath
   args = listOf("painkillergis", rootProject.name, getVersion())
 }
@@ -147,7 +151,7 @@ fun getDarkVersion(): String? {
 }
 
 val switchBackend by tasks.registering(JavaExec::class) {
-  main = "$group.${safeName()}.SwitchBackendKt"
+  main = "${packageBase()}.SwitchBackendKt"
   classpath = sourceSets["devops"].runtimeClasspath
   args = listOf(rootProject.name)
 }
