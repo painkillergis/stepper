@@ -1,8 +1,5 @@
 # stepper
-This starter gifts you a runnable barebones Kotlin Ktor application with tests.
-## Eject
-`./eject`
-Ejecting renames packages, artifacts, services, deployments, and the project name from stepper to the name of this directory.
+Stepper enables dark rollout automation.
 ## Run the tests
 `./gradlew cleanTest test`
 ### Against a deployment
