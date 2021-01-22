@@ -1,4 +1,4 @@
-package com.painkiller.ktor_starter
+package com.painkiller.stepper
 
 import org.hamcrest.Matchers
 import org.hamcrest.junit.MatcherAssert

@@ -1,4 +1,4 @@
-package com.painkiller.ktor_starter
+package com.painkiller.stepper
 
 import com.fkorotkov.kubernetes.*
 import com.fkorotkov.kubernetes.apps.metadata

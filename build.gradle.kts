@@ -140,7 +140,7 @@ val waitForDarkDeployment by tasks.registering {
 
 fun getDarkVersion(): String? {
   return try {
-    uri("http://painkiller.arctair.com/ktor-starter-dark/version")
+    uri("http://painkiller.arctair.com/stepper-dark/version")
       .toURL()
       .readBytes()
       .let { groovy.json.JsonSlurper().parse(it) as? Map<String, String> }

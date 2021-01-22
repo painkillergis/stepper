@@ -1,4 +1,4 @@
-package com.painkiller.ktor_starter
+package com.painkiller.stepper
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue

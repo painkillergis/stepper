@@ -1,4 +1,4 @@
-package com.painkiller.ktor_starter
+package com.painkiller.stepper
 
 data class Version(
   val sha: String,

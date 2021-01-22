@@ -1,1 +1,1 @@
-rootProject.name = "ktor-starter"
+rootProject.name = "stepper"

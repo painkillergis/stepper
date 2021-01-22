@@ -1,4 +1,4 @@
-package com.painkiller.ktor_starter
+package com.painkiller.stepper
 
 import io.ktor.application.*
 import io.ktor.features.*
