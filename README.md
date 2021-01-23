@@ -3,7 +3,7 @@ Stepper enables dark rollout automation.
 ## Run the tests
 `./gradlew cleanTest test`
 ### Against a deployment
-`baseUrl=http://painkiller.arctair.com/stepper ./gradlew cleanTest test`
+`stepper_baseUrl=http://painkiller.arctair.com/stepper ./gradlew cleanTest test`
 ## Build, deploy, verify
 `scripts/ci`
 The ci script executes these steps:

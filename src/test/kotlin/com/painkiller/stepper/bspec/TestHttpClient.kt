@@ -3,49 +3,46 @@ package com.painkiller.stepper.bspec
 import io.ktor.client.*
 import io.ktor.client.features.*
 import io.ktor.client.features.json.*
+import io.ktor.client.request.*
 import io.ktor.http.*
 import org.junit.jupiter.api.extension.BeforeEachCallback
 import org.junit.jupiter.api.extension.ExtensionContext
 
 @Target(AnnotationTarget.FIELD)
-annotation class TestHttpClient
+annotation class TestHttpClient(val clientName: String = "")
 
 object TestHttpClientProvider : BeforeEachCallback, ExtensionContext.Store.CloseableResource {
 
-  var protocol = URLProtocol.HTTP
-  var hostname = "localhost:8080"
-  var basePath = ""
+  private val httpClientByName = mapOf(
+    "" to HttpClient {
+      install(JsonFeature)
+      defaultRequest {
+        setBaseUrl(this, "stepper_baseUrl", "http://localhost:8080")
+      }
+    },
+  )
 
-  init {
-    val baseUrl = System.getenv("baseUrl")
-    if (baseUrl != null) {
-      val (protocolString, hostname, basePath) = Regex("(?<protocol>\\w+)://(?<hostname>[\\w.-]+(:\\d+)?)(?<basePath>.*)")
-        .matchEntire(baseUrl)
-        ?.groupValues
-        ?.slice(listOf(1, 2, 4)) ?: throw Error("baseUrl '$baseUrl' is malformed")
-      protocol = URLProtocol.createOrDefault(protocolString)
-      this.hostname = hostname
-      this.basePath = basePath
-    }
-  }
-
-  private val httpClient = HttpClient {
-    install(JsonFeature)
-    defaultRequest {
-      url.protocol = protocol
-      url.host = hostname
-      url.encodedPath = if (url.encodedPath.isEmpty()) basePath else "$basePath/${url.encodedPath}"
-    }
+  private fun setBaseUrl(builder: HttpRequestBuilder, name: String, default: String) {
+    val baseUrl = System.getenv(name) ?: default
+    val (protocolString, hostname, basePath) = Regex("(?<protocol>\\w+)://(?<hostname>[\\w.-]+(:\\d+)?)(?<basePath>.*)")
+      .matchEntire(baseUrl)
+      ?.groupValues
+      ?.slice(listOf(1, 2, 4)) ?: throw Error("URL environment property $name='$baseUrl' is malformed")
+    builder.url.protocol = URLProtocol.createOrDefault(protocolString)
+    builder.url.host = hostname
+    builder.url.encodedPath =
+      if (builder.url.encodedPath.isEmpty()) basePath
+      else "${basePath}/${builder.url.encodedPath}"
   }
 
   override fun beforeEach(context: ExtensionContext?) {
     val instance = context!!.requiredTestInstance
     instance.javaClass.declaredFields
       .filter { it.isAnnotationPresent(TestHttpClient::class.java) }
-      .forEach { it.set(instance, httpClient) }
+      .forEach { it.set(instance, httpClientByName[it.getAnnotation(TestHttpClient::class.java).clientName]) }
   }
 
   override fun close() {
-    httpClient.close()
+    httpClientByName.values.forEach(HttpClient::close)
   }
 }

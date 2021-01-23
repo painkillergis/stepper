@@ -10,7 +10,7 @@ object StartApplication : BeforeAllCallback, ExtensionContext.Store.CloseableRes
   var server: NettyApplicationEngine? = null
 
   override fun beforeAll(context: ExtensionContext?) {
-    if (System.getenv("baseUrl") != null || server != null) return
+    if (System.getenv("stepper_baseUrl") != null || server != null) return
     server = embeddedServer(
       Netty,
       applicationEngineEnvironment {
