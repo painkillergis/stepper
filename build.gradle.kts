@@ -38,8 +38,6 @@ dependencies {
   implementation("io.ktor:ktor-server-netty:+")
   implementation("org.jetbrains.kotlin:kotlin-reflect:+")
   implementation("org.jetbrains.kotlin:kotlin-stdlib:+")
-  implementation("org.jetbrains.kotlin:kotlin-stdlib:+")
-  implementation("org.slf4j:slf4j-simple:+")
   implementation("org.slf4j:slf4j-simple:+")
   testImplementation("io.ktor:ktor-client-apache:+")
   testImplementation("io.ktor:ktor-client-core:+")
