@@ -31,10 +31,15 @@ repositories {
 }
 
 dependencies {
-  implementation("org.jetbrains.kotlin:kotlin-stdlib:+")
+  implementation("com.fkorotkov:kubernetes-dsl:+")
+  implementation("io.fabric8:kubernetes-client:+")
   implementation("io.ktor:ktor-html-builder:+")
   implementation("io.ktor:ktor-jackson:+")
   implementation("io.ktor:ktor-server-netty:+")
+  implementation("org.jetbrains.kotlin:kotlin-reflect:+")
+  implementation("org.jetbrains.kotlin:kotlin-stdlib:+")
+  implementation("org.jetbrains.kotlin:kotlin-stdlib:+")
+  implementation("org.slf4j:slf4j-simple:+")
   implementation("org.slf4j:slf4j-simple:+")
   testImplementation("io.ktor:ktor-client-apache:+")
   testImplementation("io.ktor:ktor-client-core:+")
