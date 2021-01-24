@@ -127,7 +127,7 @@ docker {
 val bootstrap by tasks.registering(JavaExec::class) {
   main = "${packageBase()}.BootstrapKt"
   classpath = sourceSets["devops"].runtimeClasspath
-  args = listOf(rootProject.name)
+  args = listOf("painkillergis", rootProject.name, getVersion())
 }
 
 val darkDeploy by tasks.registering {
