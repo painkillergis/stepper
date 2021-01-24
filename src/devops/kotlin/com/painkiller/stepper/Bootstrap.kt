@@ -7,9 +7,6 @@ import com.fkorotkov.kubernetes.rbac.*
 fun main(args: Array<String>) {
   val (group, appName, version) = args
   newPrefabClient().use {
-    val darkServiceName = "$appName-dark"
-    val darkDeploymentName = "$appName-black"
-
     it.serviceAccounts().createOrReplace(
       newServiceAccount {
         metadata {
@@ -59,18 +56,18 @@ fun main(args: Array<String>) {
 
     it.services().create(
       newPrefabService(
-        darkServiceName,
-        darkDeploymentName,
+        appName,
+        "$appName-black",
       ),
     )
 
     it.apps().deployments().create(
       newPrefabDeployment(
-        darkDeploymentName,
+        "$appName-black",
         newPrefabPodTemplateSpec(
           group,
           appName,
-          darkDeploymentName,
+          "$appName-black",
           version,
         ),
       ),
