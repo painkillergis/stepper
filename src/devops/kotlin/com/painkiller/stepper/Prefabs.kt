@@ -49,6 +49,7 @@ fun newPrefabPodTemplateSpec(group: String, imageName: String, deploymentName: S
       labels = mapOf("app" to deploymentName)
     }
     spec {
+      serviceAccount = "stepper"
       containers = listOf(
         newContainer {
           name = deploymentName

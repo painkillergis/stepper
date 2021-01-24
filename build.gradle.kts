@@ -124,6 +124,12 @@ docker {
   files("build/libs/${rootProject.name}.jar")
 }
 
+val bootstrap by tasks.registering(JavaExec::class) {
+  main = "${packageBase()}.BootstrapKt"
+  classpath = sourceSets["devops"].runtimeClasspath
+  args = listOf(rootProject.name)
+}
+
 val darkDeploy by tasks.registering(JavaExec::class) {
   main = "${packageBase()}.DarkDeployKt"
   classpath = sourceSets["devops"].runtimeClasspath
