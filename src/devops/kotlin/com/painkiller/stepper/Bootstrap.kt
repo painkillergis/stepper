@@ -24,7 +24,7 @@ fun main(args: Array<String>) {
           newPolicyRule {
             apiGroups = listOf("")
             resources = listOf("services")
-            verbs = listOf("create", "get", "delete")
+            verbs = listOf("create", "get", "delete", "update")
           },
           newPolicyRule {
             apiGroups = listOf("apps")
@@ -43,6 +43,7 @@ fun main(args: Array<String>) {
         subjects = listOf(
           newSubject {
             kind = "ServiceAccount"
+            namespace = "default"
             name = appName
           }
         )
