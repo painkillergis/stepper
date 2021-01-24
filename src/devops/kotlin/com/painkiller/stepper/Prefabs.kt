@@ -28,38 +28,3 @@ fun newPrefabService(serviceName: String, deploymentName: String) =
     }
   }
 
-fun newPrefabDeployment(deploymentName: String, podTemplateSpec: PodTemplateSpec) =
-  newDeployment {
-    metadata {
-      name = deploymentName
-      labels = mapOf("app" to deploymentName)
-    }
-    spec {
-      replicas = 1
-      selector {
-        matchLabels = mapOf("app" to deploymentName)
-      }
-      template = podTemplateSpec
-    }
-  }
-
-fun newPrefabPodTemplateSpec(group: String, imageName: String, deploymentName: String, version: String) =
-  newPodTemplateSpec {
-    metadata {
-      labels = mapOf("app" to deploymentName)
-    }
-    spec {
-      serviceAccount = "stepper"
-      containers = listOf(
-        newContainer {
-          name = deploymentName
-          image = "$group/$imageName:$version"
-          ports = listOf(
-            newContainerPort {
-              containerPort = 8080
-            }
-          )
-        }
-      )
-    }
-  }
