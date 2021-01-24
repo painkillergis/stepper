@@ -5,19 +5,19 @@ fun main(args: Array<String>) {
   newPrefabClient().use {
     it
       .run {
-        val isRed = services().withName(name).get()?.isRed() ?: false
+        val darkDeploymentName = services().withName("$name-dark").get()?.spec?.selector?.get("app") ?: throw Error("No dark deployment to promote!")
 
         services().createOrReplace(
           newPrefabService(
             name,
-            "$name-${if (isRed) "black" else "red"}",
+            darkDeploymentName
           ),
         )
 
         services().createOrReplace(
           newPrefabService(
             "$name-dark",
-            "$name-${if (isRed) "red" else "black"}",
+            if (darkDeploymentName == "$name-black")  "$name-red"  else "$name-black",
           ),
         )
       }
