@@ -3,6 +3,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
   application
   kotlin("jvm") version "1.4.21"
+  kotlin("plugin.serialization") version "1.4.21"
   id("com.github.johnrengelman.shadow") version "4.0.4"
   id("com.palantir.docker") version "0.25.0"
 }
@@ -38,6 +39,7 @@ dependencies {
   implementation("io.ktor:ktor-server-netty:+")
   implementation("org.jetbrains.kotlin:kotlin-reflect:+")
   implementation("org.jetbrains.kotlin:kotlin-stdlib:+")
+  implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:+")
   implementation("org.slf4j:slf4j-simple:+")
   testImplementation("io.ktor:ktor-client-apache:+")
   testImplementation("io.ktor:ktor-client-core:+")

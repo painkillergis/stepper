@@ -1,4 +1,4 @@
-package com.painkiller.stepper
+package com.painkiller.stepper.version
 
 import org.hamcrest.Matchers
 import org.hamcrest.junit.MatcherAssert

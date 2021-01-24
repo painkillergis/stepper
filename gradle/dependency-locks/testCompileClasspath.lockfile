@@ -129,6 +129,10 @@ org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.4.2
 org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.2
 org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:1.4.2-native-mt
 org.jetbrains.kotlinx:kotlinx-html-jvm:0.7.2
+org.jetbrains.kotlinx:kotlinx-serialization-core-jvm:1.0.1
+org.jetbrains.kotlinx:kotlinx-serialization-core:1.0.1
+org.jetbrains.kotlinx:kotlinx-serialization-json-jvm:1.0.1
+org.jetbrains.kotlinx:kotlinx-serialization-json:1.0.1
 org.jetbrains:annotations:13.0
 org.junit.jupiter:junit-jupiter-api:5.7.0
 org.junit.platform:junit-platform-commons:1.7.0
