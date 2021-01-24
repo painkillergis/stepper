@@ -55,7 +55,7 @@ dependencies {
 
 tasks.test {
   useJUnitPlatform()
-  if (System.getenv("baseUrl") != null || System.getProperty("bspec") != null) {
+  if (System.getenv("stepper_baseUrl") != null || System.getProperty("bspec") != null) {
     include("**/bspec/")
   }
 }
