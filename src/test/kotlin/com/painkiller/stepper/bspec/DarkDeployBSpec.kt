@@ -6,7 +6,6 @@ import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import io.ktor.http.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.extension.ExtendWith
 import org.junit.jupiter.api.extension.Extensions
@@ -18,26 +17,13 @@ import kotlin.test.assertEquals
   ExtendWith(StartApplication::class),
   ExtendWith(TestHttpClientProvider::class),
 )
-class DarkDeployBSpec {
+internal class DarkDeployBSpec {
 
   @TestHttpClient()
   lateinit var stepperClient: HttpClient
 
   @TestHttpClient("target-dark")
   lateinit var targetDarkClient: HttpClient
-
-  suspend fun <T> retry(times: Int, block: suspend () -> T): T {
-    var delay = 250L
-    repeat(times - 1) {
-      try {
-        return block()
-      } catch (error: Error) {
-        delay(delay)
-        delay *= 2
-      }
-    }
-    return block()
-  }
 
   @Test
   fun `dark deploy`() {
