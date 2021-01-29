@@ -25,6 +25,7 @@ fun newPrefabService(serviceName: String, deploymentName: String) = newService {
 fun newPrefabDeployment(imageName: String, deploymentName: String, version: String) = newDeployment {
   metadata {
     name = deploymentName
+    labels = mapOf("app" to deploymentName)
   }
   spec {
     selector {

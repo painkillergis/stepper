@@ -22,4 +22,11 @@ class DeploymentService(val kubernetesClient: NamespacedKubernetesClient) {
       .delete()
     service.delete()
   }
+
+  fun getServiceAccount(serviceName: String) : String {
+    return kubernetesClient.apps().deployments()
+      .withLabel("app", kubernetesClient.services().withName(serviceName).get().spec.selector["app"])
+      .list().items[0]
+      .spec.template.spec.serviceAccount ?: "default"
+  }
 }

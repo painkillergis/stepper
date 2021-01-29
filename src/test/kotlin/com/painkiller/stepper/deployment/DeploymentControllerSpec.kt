@@ -49,7 +49,6 @@ internal class DeploymentControllerSpec {
     assertEquals(HttpStatusCode.InternalServerError, call.response.status())
   }
 
-
   @Test
   fun `delete service and deployment`() = withController {
     every { deploymentService.delete("anything") } returns Unit
@@ -62,6 +61,23 @@ internal class DeploymentControllerSpec {
   fun `delete service and deployment failure`() = withController {
     every { deploymentService.delete("anything") } throws Error("failure")
     val call = handleRequest(method = HttpMethod.Delete, uri = "/services/anything")
+
+    assertEquals(HttpStatusCode.InternalServerError, call.response.status())
+  }
+
+  @Test
+  fun `get deployment service account`() = withController {
+    every { deploymentService.getServiceAccount("anything") } returns "the service account"
+    val call = handleRequest(method = HttpMethod.Get, uri = "/services/anything/deployment/serviceAccount")
+
+    assertEquals(HttpStatusCode.OK, call.response.status())
+    assertEquals("the service account", call.response.content)
+  }
+
+  @Test
+  fun `get deployment service account failure`() = withController {
+    every { deploymentService.getServiceAccount("anything") } throws Error("failure")
+    val call = handleRequest(method = HttpMethod.Get, uri = "/services/anything/deployment/serviceAccount")
 
     assertEquals(HttpStatusCode.InternalServerError, call.response.status())
   }

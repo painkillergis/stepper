@@ -29,5 +29,13 @@ fun Application.deploymentController(deploymentService: DeploymentService) {
         call.respond(HttpStatusCode.InternalServerError)
       }
     }
+    get("/services/{name}/deployment/serviceAccount") {
+      try {
+        call.respond(deploymentService.getServiceAccount(call.parameters["name"]!!))
+      } catch (error: Error) {
+        call.application.environment.log.error(error.message)
+        call.respond(HttpStatusCode.InternalServerError)
+      }
+    }
   }
 }
