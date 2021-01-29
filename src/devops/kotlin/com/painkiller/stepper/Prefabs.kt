@@ -28,6 +28,12 @@ fun newPrefabService(serviceName: String, deploymentName: String) =
     }
   }
 
+fun newPrefabServiceAccount(serviceAccountName : String) = newServiceAccount {
+  metadata {
+    name = serviceAccountName
+  }
+}
+
 fun newPrefabDeployment(deploymentName: String, podTemplateSpec: PodTemplateSpec) =
   newDeployment {
     metadata {
@@ -49,7 +55,7 @@ fun newPrefabPodTemplateSpec(group: String, imageName: String, deploymentName: S
       labels = mapOf("app" to deploymentName)
     }
     spec {
-      serviceAccount = "stepper"
+      serviceAccount = "stepper-dark"
       containers = listOf(
         newContainer {
           name = deploymentName

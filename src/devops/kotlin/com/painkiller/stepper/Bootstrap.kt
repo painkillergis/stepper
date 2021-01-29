@@ -1,20 +1,10 @@
 package com.painkiller.stepper
 
-import com.fkorotkov.kubernetes.metadata
-import com.fkorotkov.kubernetes.newServiceAccount
 import com.fkorotkov.kubernetes.rbac.*
 
 fun main(args: Array<String>) {
-  val (group, appName, version) = args
+  val (appName) = args
   newPrefabClient().use {
-    it.serviceAccounts().createOrReplace(
-      newServiceAccount {
-        metadata {
-          name = appName
-        }
-      }
-    )
-
     it.rbac().roles().createOrReplace(
       newRole {
         metadata {
@@ -25,6 +15,11 @@ fun main(args: Array<String>) {
             apiGroups = listOf("")
             resources = listOf("services")
             verbs = listOf("create", "delete", "get", "update")
+          },
+          newPolicyRule {
+            apiGroups = listOf("")
+            resources = listOf("serviceaccounts")
+            verbs = listOf("create", "get", "update")
           },
           newPolicyRule {
             apiGroups = listOf("apps")
@@ -44,8 +39,8 @@ fun main(args: Array<String>) {
           newSubject {
             kind = "ServiceAccount"
             namespace = "default"
-            name = appName
-          }
+            name = "$appName-dark"
+          },
         )
         roleRef {
           kind = "Role"

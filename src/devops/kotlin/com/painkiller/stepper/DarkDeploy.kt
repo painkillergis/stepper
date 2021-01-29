@@ -2,30 +2,29 @@ package com.painkiller.stepper
 
 fun main(args: Array<String>) {
   val (group, name, version) = args
+  val darkDeploymentName = "$name-dark-${version.replace(".", "-")}"
   newPrefabClient().use {
-    it
-      .apply {
-        val isRed = services().withName(name).get()?.isRed() ?: false
-        val darkDeploymentName = "$name-${if (isRed) "black" else "red"}"
+    it.serviceAccounts().createOrReplace(
+      newPrefabServiceAccount("$name-dark"),
+    )
 
-        services().createOrReplace(
-          newPrefabService(
-            "$name-dark",
-            darkDeploymentName,
-          ),
-        )
+    it.services().createOrReplace(
+      newPrefabService(
+        "$name-dark",
+        darkDeploymentName,
+      ),
+    )
 
-        apps().deployments().createOrReplace(
-          newPrefabDeployment(
-            darkDeploymentName,
-            newPrefabPodTemplateSpec(
-              group,
-              name,
-              darkDeploymentName,
-              version,
-            ),
-          ),
-        )
-      }
+    it.apps().deployments().createOrReplace(
+      newPrefabDeployment(
+        darkDeploymentName,
+        newPrefabPodTemplateSpec(
+          group,
+          name,
+          darkDeploymentName,
+          version,
+        ),
+      ),
+    )
   }
 }
