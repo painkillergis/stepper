@@ -3,23 +3,24 @@ package com.painkiller.stepper
 fun main(args: Array<String>) {
   val (name) = args
   newPrefabClient().use {
-    it
-      .run {
-        val darkDeploymentName = services().withName("$name-dark").get()?.spec?.selector?.get("app") ?: throw Error("No dark deployment to promote!")
+    val deploymentName = it.services().withName(name).get()?.spec?.selector?.get("app")
+    val darkDeploymentName = it.services().withName("$name-dark").get()?.spec?.selector?.get("app")
+      ?: throw Error("No dark deployment to promote!")
 
-        services().createOrReplace(
-          newPrefabService(
-            name,
-            darkDeploymentName
-          ),
-        )
+    it.services().createOrReplace(
+      newPrefabService(
+        name,
+        darkDeploymentName
+      ),
+    )
 
-        services().createOrReplace(
-          newPrefabService(
-            "$name-dark",
-            if (darkDeploymentName == "$name-black")  "$name-red"  else "$name-black",
-          ),
-        )
-      }
+    if (deploymentName != null) {
+      it.services().createOrReplace(
+        newPrefabService(
+          "$name-dark",
+          deploymentName,
+        ),
+      )
+    }
   }
 }
