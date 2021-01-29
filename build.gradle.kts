@@ -162,13 +162,8 @@ fun getDarkVersion(): String? {
   } ?: "unavailable"
 }
 
-val switchBackend by tasks.registering {
-  doLast {
-    val connection = uri("http://painkiller.arctair.com/stepper/services/${rootProject.name}/switchDeploymentsWith/${rootProject.name}-dark").toURL()
-      .openConnection() as java.net.HttpURLConnection
-    connection.doOutput = true
-    connection.requestMethod = "POST"
-    connection.connect()
-    (connection.responseCode == 200) || throw Error("Got status code ${connection.responseCode}")
-  }
+val switchBackend by tasks.registering(JavaExec::class) {
+  main = "${packageBase()}.SwitchDeploymentsKt"
+  classpath = sourceSets["devops"].runtimeClasspath
+  args = listOf(rootProject.name, "${rootProject.name}-dark")
 }
