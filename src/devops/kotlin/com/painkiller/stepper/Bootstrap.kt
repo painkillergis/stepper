@@ -1,10 +1,11 @@
 package com.painkiller.stepper
 
 import com.fkorotkov.kubernetes.rbac.*
+import io.fabric8.kubernetes.client.DefaultKubernetesClient
 
 fun main(args: Array<String>) {
   val (appName) = args
-  newPrefabClient().use {
+  DefaultKubernetesClient().inNamespace("default").use {
     it.rbac().roles().createOrReplace(
       newRole {
         metadata {
