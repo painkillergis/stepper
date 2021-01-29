@@ -24,12 +24,12 @@ fun main(args: Array<String>) {
           newPolicyRule {
             apiGroups = listOf("")
             resources = listOf("services")
-            verbs = listOf("create", "get", "delete", "update")
+            verbs = listOf("create", "delete", "get", "update")
           },
           newPolicyRule {
             apiGroups = listOf("apps")
             resources = listOf("deployments")
-            verbs = listOf("create", "get", "list", "update")
+            verbs = listOf("create", "delete", "get", "list", "update")
           }
         )
       }
