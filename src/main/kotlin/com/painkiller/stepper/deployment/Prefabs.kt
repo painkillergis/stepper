@@ -1,4 +1,4 @@
-package com.painkiller.stepper.dark_deployment
+package com.painkiller.stepper.deployment
 
 import com.fkorotkov.kubernetes.*
 import com.fkorotkov.kubernetes.apps.*
@@ -22,7 +22,7 @@ fun newPrefabService(serviceName: String, deploymentName: String) = newService {
   }
 }
 
-fun newPrefabDeployment(appName: String, deploymentName: String, version: String) = newDeployment {
+fun newPrefabDeployment(imageName: String, deploymentName: String, version: String) = newDeployment {
   metadata {
     name = deploymentName
   }
@@ -37,7 +37,7 @@ fun newPrefabDeployment(appName: String, deploymentName: String, version: String
       spec {
         containers = listOf(
           newContainer {
-            image = "painkillergis/$appName:$version"
+            image = "painkillergis/$imageName:$version"
             name = deploymentName
             ports = listOf(
               newContainerPort {

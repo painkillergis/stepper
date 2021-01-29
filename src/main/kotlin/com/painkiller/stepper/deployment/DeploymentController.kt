@@ -1,4 +1,4 @@
-package com.painkiller.stepper.dark_deployment
+package com.painkiller.stepper.deployment
 
 import io.ktor.application.*
 import io.ktor.http.*
@@ -6,11 +6,11 @@ import io.ktor.request.*
 import io.ktor.response.*
 import io.ktor.routing.*
 
-fun Application.darkDeployController(darkDeployService: DarkDeployService) {
+fun Application.deploymentController(deploymentService: DeploymentService) {
   routing {
-    post("/apps/{name}/darkDeployment") {
+    post("/services/{name}/deployment") {
       try {
-        darkDeployService.createOrReplace(
+        deploymentService.createOrReplace(
           call.parameters["name"]!!,
           call.receive()
         )
@@ -20,9 +20,9 @@ fun Application.darkDeployController(darkDeployService: DarkDeployService) {
         call.respond(HttpStatusCode.InternalServerError)
       }
     }
-    delete("/apps/{name}/darkDeployment") {
+    delete("/services/{name}") {
       try {
-        darkDeployService.delete(call.parameters["name"]!!)
+        deploymentService.delete(call.parameters["name"]!!)
         call.respond(HttpStatusCode.OK)
       } catch (error: Error) {
         call.application.environment.log.error(error.message)

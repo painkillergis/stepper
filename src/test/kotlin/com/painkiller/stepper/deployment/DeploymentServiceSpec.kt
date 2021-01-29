@@ -1,4 +1,4 @@
-package com.painkiller.stepper.dark_deployment
+package com.painkiller.stepper.deployment
 
 import com.fkorotkov.kubernetes.newService
 import com.fkorotkov.kubernetes.spec
@@ -7,6 +7,7 @@ import io.fabric8.kubernetes.api.model.ServiceList
 import io.fabric8.kubernetes.api.model.apps.Deployment
 import io.fabric8.kubernetes.api.model.apps.DeploymentList
 import io.fabric8.kubernetes.client.NamespacedKubernetesClient
+import io.fabric8.kubernetes.client.dsl.FilterWatchListDeletable
 import io.fabric8.kubernetes.client.dsl.MixedOperation
 import io.fabric8.kubernetes.client.dsl.RollableScalableResource
 import io.fabric8.kubernetes.client.dsl.ServiceResource
@@ -16,7 +17,7 @@ import org.junit.jupiter.api.extension.ExtendWith
 import kotlin.test.Test
 
 @ExtendWith(MockKExtension::class)
-internal class DarkDeployServiceSpec {
+internal class DeploymentServiceSpec {
 
   private val services = mockk<MixedOperation<Service, ServiceList, ServiceResource<Service>>>(relaxed = true) { }
 
@@ -31,23 +32,26 @@ internal class DarkDeployServiceSpec {
   }
 
   @Test
-  fun `create dark service and black deployment when service does not exist`() {
+  fun `create dark service and black deployment when they don't exist`() {
     every {
       hint(ServiceResource::class)
-      services.withName("app-name-dark")
+      services.withName("app-name")
     } returns mockk(relaxed = true) {
       every { get() } returns null
     }
 
-    DarkDeployService(kubernetesClient).createOrReplace("app-name", DarkDeployment("v5.4.3"))
+    DeploymentService(kubernetesClient).createOrReplace(
+      "app-name",
+      Deployment("imageName", "v5.4.3")
+    )
 
     excludeRecords { services.withName(any()) }
     verify {
       services.createOrReplace(
-        newPrefabService("app-name-dark", "app-name-black")
+        newPrefabService("app-name", "app-name-v5-4-3")
       )
       deployments.createOrReplace(
-        newPrefabDeployment("app-name", "app-name-black", "v5.4.3")
+        newPrefabDeployment("imageName", "app-name-v5-4-3", "v5.4.3")
       )
     }
     confirmVerified(services)
@@ -55,27 +59,30 @@ internal class DarkDeployServiceSpec {
   }
 
   @Test
-  fun `replace dark service and black deployment when service is wired to black deployment`() {
+  fun `replace service and deployment when they exist`() {
     every {
       hint(ServiceResource::class)
-      services.withName("app-name-dark")
+      services.withName("app-name")
     } returns mockk {
       every { get() } returns newService {
         spec {
-          selector = mapOf("app" to "app-name-black")
+          selector = mapOf("app" to "app-name-v5-4-3")
         }
       }
     }
 
-    DarkDeployService(kubernetesClient).createOrReplace("app-name", DarkDeployment("v5.4.3"))
+    DeploymentService(kubernetesClient).createOrReplace(
+      "app-name",
+      Deployment("imageName", "v5.4.3")
+    )
 
     excludeRecords { services.withName(any()) }
     verify {
       services.createOrReplace(
-        newPrefabService("app-name-dark", "app-name-black")
+        newPrefabService("app-name", "app-name-v5-4-3")
       )
       deployments.createOrReplace(
-        newPrefabDeployment("app-name", "app-name-black", "v5.4.3")
+        newPrefabDeployment("imageName", "app-name-v5-4-3", "v5.4.3")
       )
     }
 
@@ -83,46 +90,34 @@ internal class DarkDeployServiceSpec {
   }
 
   @Test
-  fun `replace dark service and black deployment when service is wired to red deployment`() {
-    every {
-      hint(ServiceResource::class)
-      services.withName("app-name-dark")
-    } returns mockk {
+  fun `delete service and deployment`() {
+    val service = mockk<ServiceResource<Service>>(relaxed = true) {
       every { get() } returns newService {
         spec {
-          selector = mapOf("app" to "app-name-red")
+          selector = mapOf("app" to "the deployment label")
         }
       }
     }
-
-    DarkDeployService(kubernetesClient).createOrReplace("app-name", DarkDeployment("v5.4.3"))
-
-    excludeRecords { services.withName(any()) }
-    verify {
-      services.createOrReplace(
-        newPrefabService("app-name-dark", "app-name-red")
-      )
-      deployments.createOrReplace(
-        newPrefabDeployment("app-name", "app-name-red", "v5.4.3")
-      )
-    }
-
-    confirmVerified(services)
-  }
-
-  @Test
-  fun `delete dark service`() {
-    val service = mockk<ServiceResource<Service>>(relaxed = true) {}
     every {
       hint(ServiceResource::class)
-      services.withName("app-name-dark")
+      services.withName("app-name")
     } returns service
 
-    DarkDeployService(kubernetesClient).delete("app-name")
+    val deploymentsMatchingLabel = mockk<FilterWatchListDeletable<Deployment, DeploymentList>>(relaxed = true) {}
+    every {
+      deployments.withLabel("app", "the deployment label")
+    } returns deploymentsMatchingLabel
 
-    verify { service.delete() }
+    DeploymentService(kubernetesClient).delete("app-name")
 
+    verify {
+      service.delete()
+      deploymentsMatchingLabel.delete()
+    }
+
+    excludeRecords { service.get() }
     confirmVerified(service)
+    confirmVerified(deploymentsMatchingLabel)
   }
 }
 

@@ -17,7 +17,7 @@ import kotlin.test.assertEquals
   ExtendWith(StartApplication::class),
   ExtendWith(TestHttpClientProvider::class),
 )
-internal class DarkDeployBSpec {
+internal class DeploymentBSpec {
 
   @TestHttpClient()
   lateinit var stepperClient: HttpClient
@@ -26,11 +26,11 @@ internal class DarkDeployBSpec {
   lateinit var targetDarkClient: HttpClient
 
   @Test
-  fun `dark deploy`() {
+  fun `create deployment`() {
     assertEquals(
       HttpStatusCode.OK,
       runBlocking {
-        stepperClient.delete<HttpResponse>("/apps/stepper-target/darkDeployment").status
+        stepperClient.delete<HttpResponse>("/services/stepper-target-dark").status
       }
     )
 
@@ -45,9 +45,12 @@ internal class DarkDeployBSpec {
 
     runBlocking {
       stepperClient.post<Unit> {
-        url("/apps/stepper-target/darkDeployment")
+        url("/services/stepper-target-dark/deployment")
         contentType(ContentType.Application.Json)
-        body = mapOf("version" to "v0.0.3")
+        body = mapOf(
+          "imageName" to "stepper-target",
+          "version" to "v0.0.3",
+        )
       }
     }
 
