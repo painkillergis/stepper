@@ -31,7 +31,14 @@ repositories {
   maven { url = uri("https://dl.bintray.com/kotlin/ktor") }
 }
 
+sourceSets.create("devops").java.srcDir("src/deploy/kotlin")
+
 dependencies {
+  "devopsImplementation"("com.fkorotkov:kubernetes-dsl:+")
+  "devopsImplementation"("io.fabric8:kubernetes-client:+")
+  "devopsImplementation"("org.jetbrains.kotlin:kotlin-reflect:+")
+  "devopsImplementation"("org.jetbrains.kotlin:kotlin-stdlib:+")
+  "devopsImplementation"("org.slf4j:slf4j-simple:+")
   implementation("com.fkorotkov:kubernetes-dsl:+")
   implementation("io.fabric8:kubernetes-client:+")
   implementation("io.ktor:ktor-html-builder:+")
@@ -58,15 +65,6 @@ tasks.test {
   if (System.getenv("stepper_baseUrl") != null || System.getProperty("bspec") != null) {
     include("**/bspec/")
   }
-}
-
-sourceSets.create("devops").java.srcDir("src/deploy/kotlin")
-kotlin.sourceSets["devops"].dependencies {
-  implementation("com.fkorotkov:kubernetes-dsl:+")
-  implementation("io.fabric8:kubernetes-client:+")
-  implementation("org.jetbrains.kotlin:kotlin-reflect:+")
-  implementation("org.jetbrains.kotlin:kotlin-stdlib:+")
-  implementation("org.slf4j:slf4j-simple:+")
 }
 
 tasks.withType<KotlinCompile>() {
