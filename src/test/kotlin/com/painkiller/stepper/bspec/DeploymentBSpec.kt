@@ -7,6 +7,8 @@ import io.ktor.client.statement.*
 import io.ktor.http.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
+import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.extension.ExtendWith
 import org.junit.jupiter.api.extension.Extensions
 import kotlin.test.Test
@@ -25,15 +27,19 @@ internal class DeploymentBSpec {
   @TestHttpClient("target-dark")
   lateinit var targetDarkClient: HttpClient
 
-  @Test
-  fun `create deployment`() {
+  @BeforeEach
+  @AfterEach
+  fun cleanup() {
     assertEquals(
       HttpStatusCode.OK,
       runBlocking {
         stepperClient.delete<HttpResponse>("/services/stepper-target-dark").status
       }
     )
+  }
 
+  @Test
+  fun `create deployment`() {
     runBlocking {
       retry(6) {
         assertEquals(
