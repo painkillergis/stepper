@@ -61,5 +61,12 @@ internal class DeploymentBSpec {
         assertEquals("v0.0.3", response.receive<Version>().version)
       }
     }
+
+    runBlocking {
+      assertEquals(
+        "default",
+        stepperClient.get("/services/stepper-target-dark/deployment/serviceAccount"),
+      )
+    }
   }
 }
