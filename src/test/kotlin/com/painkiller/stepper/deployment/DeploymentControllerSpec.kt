@@ -81,4 +81,20 @@ internal class DeploymentControllerSpec {
 
     assertEquals(HttpStatusCode.InternalServerError, call.response.status())
   }
+
+  @Test
+  fun `swap backends`() = withController {
+    every { deploymentService.switchDeployments("service1", "service2") } returns Unit
+    val call = handleRequest(method = HttpMethod.Post, uri = "/services/service1/switchDeploymentsWith/service2")
+
+    assertEquals(HttpStatusCode.OK, call.response.status())
+  }
+
+  @Test
+  fun `swap backends failure`() = withController {
+    every { deploymentService.switchDeployments("service1", "service2") } throws Error("failure")
+    val call = handleRequest(method = HttpMethod.Post, uri = "/services/service1/switchDeploymentsWith/service2")
+
+    assertEquals(HttpStatusCode.InternalServerError, call.response.status())
+  }
 }

@@ -37,5 +37,17 @@ fun Application.deploymentController(deploymentService: DeploymentService) {
         call.respond(HttpStatusCode.InternalServerError)
       }
     }
+    post("/services/{firstServiceName}/switchDeploymentsWith/{lastServiceName}") {
+      try {
+        deploymentService.switchDeployments(
+          call.parameters["firstServiceName"]!!,
+          call.parameters["lastServiceName"]!!,
+        )
+        call.respond(HttpStatusCode.OK)
+      } catch (error: Error) {
+        call.application.environment.log.error(error.message)
+        call.respond(HttpStatusCode.InternalServerError)
+      }
+    }
   }
 }

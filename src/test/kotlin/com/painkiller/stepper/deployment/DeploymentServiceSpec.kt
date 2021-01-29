@@ -15,6 +15,7 @@ import io.fabric8.kubernetes.client.NamespacedKubernetesClient
 import io.fabric8.kubernetes.client.dsl.*
 import io.mockk.*
 import io.mockk.junit5.MockKExtension
+import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -214,6 +215,139 @@ internal class DeploymentServiceSpec {
       "default",
       DeploymentService(kubernetesClient).getServiceAccount("app-name"),
     )
+  }
+
+  @Test
+  fun `switch backends`() {
+    every {
+      hint(ServiceResource::class)
+      services.withName("firstServiceName")
+    } returns mockk {
+      every { get() } returns newService {
+        spec {
+          selector = mapOf("app" to "firstDeploymentName")
+        }
+      }
+    }
+
+    every {
+      hint(ServiceResource::class)
+      services.withName("lastServiceName")
+    } returns mockk {
+      every { get() } returns newService {
+        spec {
+          selector = mapOf("app" to "lastDeploymentName")
+        }
+      }
+    }
+
+    DeploymentService(kubernetesClient).switchDeployments(
+      "firstServiceName",
+      "lastServiceName",
+    )
+
+    verify {
+      services.createOrReplace(
+        newPrefabService("firstServiceName", "lastDeploymentName"),
+      )
+      services.createOrReplace(
+        newPrefabService("lastServiceName", "firstDeploymentName"),
+      )
+    }
+  }
+
+  @Test
+  fun `switch backends when last is missing`() {
+    every {
+      hint(ServiceResource::class)
+      services.withName("firstServiceName")
+    } returns mockk {
+      every { get() } returns newService {
+        spec {
+          selector = mapOf("app" to "firstDeploymentName")
+        }
+      }
+    }
+
+    every {
+      hint(ServiceResource::class)
+      services.withName("lastServiceName")
+    } returns mockk {
+      every { get() } returns null
+    }
+
+    DeploymentService(kubernetesClient).switchDeployments(
+      "firstServiceName",
+      "lastServiceName",
+    )
+
+    verify {
+      services.createOrReplace(
+        newPrefabService("firstServiceName", ""),
+      )
+      services.createOrReplace(
+        newPrefabService("lastServiceName", "firstDeploymentName"),
+      )
+    }
+  }
+
+  @Test
+  fun `switch backends when first is missing`() {
+    every {
+      hint(ServiceResource::class)
+      services.withName("firstServiceName")
+    } returns mockk {
+      every { get() } returns null
+    }
+
+    every {
+      hint(ServiceResource::class)
+      services.withName("lastServiceName")
+    } returns mockk {
+      every { get() } returns newService {
+        spec {
+          selector = mapOf("app" to "lastDeploymentName")
+        }
+      }
+    }
+
+    DeploymentService(kubernetesClient).switchDeployments(
+      "firstServiceName",
+      "lastServiceName",
+    )
+
+    verify {
+      services.createOrReplace(
+        newPrefabService("firstServiceName", "lastDeploymentName"),
+      )
+      services.createOrReplace(
+        newPrefabService("lastServiceName", ""),
+      )
+    }
+  }
+
+  @Test
+  fun `switch backends when both are missing`() {
+    every {
+      hint(ServiceResource::class)
+      services.withName("firstServiceName")
+    } returns mockk {
+      every { get() } returns null
+    }
+
+    every {
+      hint(ServiceResource::class)
+      services.withName("lastServiceName")
+    } returns mockk {
+      every { get() } returns null
+    }
+
+    assertThrows<Error>("No deployments available to switch") {
+      DeploymentService(kubernetesClient).switchDeployments(
+        "firstServiceName",
+        "lastServiceName",
+      )
+    }
   }
 }
 

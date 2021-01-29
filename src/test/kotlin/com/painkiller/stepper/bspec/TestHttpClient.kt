@@ -20,6 +20,13 @@ object TestHttpClientProvider : BeforeEachCallback, ExtensionContext.Store.Close
         setBaseUrl(this, "stepper_baseUrl", "http://localhost:8080")
       }
     },
+    "target" to HttpClient {
+      expectSuccess = false
+      install(JsonFeature)
+      defaultRequest {
+        setBaseUrl(this, "target_baseUrl", "http://painkiller.arctair.com/stepper-target")
+      }
+    },
     "target-dark" to HttpClient {
       expectSuccess = false
       install(JsonFeature)

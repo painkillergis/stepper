@@ -21,8 +21,11 @@ import kotlin.test.assertEquals
 )
 internal class DeploymentBSpec {
 
-  @TestHttpClient()
+  @TestHttpClient
   lateinit var stepperClient: HttpClient
+
+  @TestHttpClient("target")
+  lateinit var targetClient: HttpClient
 
   @TestHttpClient("target-dark")
   lateinit var targetDarkClient: HttpClient
@@ -30,6 +33,13 @@ internal class DeploymentBSpec {
   @BeforeEach
   @AfterEach
   fun cleanup() {
+    assertEquals(
+      HttpStatusCode.OK,
+      runBlocking {
+        stepperClient.delete<HttpResponse>("/services/stepper-target").status
+      }
+    )
+
     assertEquals(
       HttpStatusCode.OK,
       runBlocking {
@@ -73,6 +83,21 @@ internal class DeploymentBSpec {
         "stepper-target-dark",
         stepperClient.get("/services/stepper-target-dark/deployment/serviceAccount"),
       )
+    }
+
+    runBlocking {
+      stepperClient.post<Unit>("/services/stepper-target/switchDeploymentsWith/stepper-target-dark")
+    }
+
+    runBlocking {
+      retry(7) {
+        val response = targetClient.get<HttpResponse>("/version")
+        assertEquals(HttpStatusCode.OK, response.status)
+        assertEquals("v0.0.3", response.receive<Version>().version)
+
+        val darkResponse = targetDarkClient.get<HttpResponse>("/version")
+        assertEquals(HttpStatusCode.ServiceUnavailable, darkResponse.status)
+      }
     }
   }
 }
