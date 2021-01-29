@@ -141,6 +141,7 @@ val darkDeploy by tasks.registering {
       it.write("{\"imageName\":\"stepper\",\"version\":\"${getVersion()}\"}".toByteArray())
     }
     connection.connect()
+    (connection.responseCode == 200) || throw Error("Got status code ${connection.responseCode}")
   }
 }
 
