@@ -36,6 +36,9 @@ sourceSets.create("devops").java.srcDir("src/deploy/kotlin")
 dependencies {
   "devopsImplementation"("com.fkorotkov:kubernetes-dsl:+")
   "devopsImplementation"("io.fabric8:kubernetes-client:+")
+  "devopsImplementation"("io.ktor:ktor-client-apache:+")
+  "devopsImplementation"("io.ktor:ktor-client-core:+")
+  "devopsImplementation"("io.ktor:ktor-client-jackson:+")
   "devopsImplementation"("org.jetbrains.kotlin:kotlin-reflect:+")
   "devopsImplementation"("org.jetbrains.kotlin:kotlin-stdlib:+")
   "devopsImplementation"("org.slf4j:slf4j-simple:+")
@@ -128,19 +131,10 @@ val bootstrap by tasks.registering(JavaExec::class) {
   args = listOf(rootProject.name)
 }
 
-val darkDeploy by tasks.registering {
-  doLast {
-    val connection = uri("http://painkiller.arctair.com/stepper/services/stepper-dark/deployment").toURL()
-      .openConnection() as java.net.HttpURLConnection
-    connection.doOutput = true
-    connection.requestMethod = "POST"
-    connection.setRequestProperty("content-type", "application/json")
-    connection.outputStream.use {
-      it.write("{\"imageName\":\"stepper\",\"version\":\"${getVersion()}\"}".toByteArray())
-    }
-    connection.connect()
-    (connection.responseCode == 200) || throw Error("Got status code ${connection.responseCode}")
-  }
+val darkDeploy by tasks.registering(JavaExec::class) {
+  main = "${packageBase()}.DeploymentKt"
+  classpath = sourceSets["devops"].runtimeClasspath
+  args = listOf("${rootProject.name}-dark", rootProject.name, getVersion())
 }
 
 val waitForDarkDeployment by tasks.registering {
