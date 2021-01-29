@@ -6,14 +6,13 @@ import com.fkorotkov.kubernetes.apps.template
 import com.fkorotkov.kubernetes.newService
 import com.fkorotkov.kubernetes.spec
 import io.fabric8.kubernetes.api.model.Service
+import io.fabric8.kubernetes.api.model.ServiceAccount
+import io.fabric8.kubernetes.api.model.ServiceAccountList
 import io.fabric8.kubernetes.api.model.ServiceList
 import io.fabric8.kubernetes.api.model.apps.Deployment
 import io.fabric8.kubernetes.api.model.apps.DeploymentList
 import io.fabric8.kubernetes.client.NamespacedKubernetesClient
-import io.fabric8.kubernetes.client.dsl.FilterWatchListDeletable
-import io.fabric8.kubernetes.client.dsl.MixedOperation
-import io.fabric8.kubernetes.client.dsl.RollableScalableResource
-import io.fabric8.kubernetes.client.dsl.ServiceResource
+import io.fabric8.kubernetes.client.dsl.*
 import io.mockk.*
 import io.mockk.junit5.MockKExtension
 import org.junit.jupiter.api.extension.ExtendWith
@@ -28,15 +27,19 @@ internal class DeploymentServiceSpec {
   private val deployments =
     mockk<MixedOperation<Deployment, DeploymentList, RollableScalableResource<Deployment>>>(relaxed = true) {}
 
+  private val serviceAccounts =
+    mockk<MixedOperation<ServiceAccount, ServiceAccountList, Resource<ServiceAccount>>>(relaxed = true) {}
+
   private val kubernetesClient = mockk<NamespacedKubernetesClient> {
     every { services() } returns services
     every { apps() } returns mockk {
       every { deployments() } returns deployments
     }
+    every { serviceAccounts() } returns serviceAccounts
   }
 
   @Test
-  fun `create dark service and black deployment when they don't exist`() {
+  fun `create service, deployment, and service account when they don't exist`() {
     every {
       hint(ServiceResource::class)
       services.withName("app-name")
@@ -55,11 +58,16 @@ internal class DeploymentServiceSpec {
         newPrefabService("app-name", "app-name-v5-4-3")
       )
       deployments.createOrReplace(
-        newPrefabDeployment("app-name-v5-4-3", "imageName", "v5.4.3")
+        newPrefabDeployment("app-name", "app-name-v5-4-3", "imageName", "v5.4.3")
+      )
+      serviceAccounts.createOrReplace(
+        newPrefabServiceAccount("app-name"),
       )
     }
+
     confirmVerified(services)
     confirmVerified(deployments)
+    confirmVerified(serviceAccounts)
   }
 
   @Test
@@ -86,11 +94,16 @@ internal class DeploymentServiceSpec {
         newPrefabService("app-name", "app-name-v5-4-3")
       )
       deployments.createOrReplace(
-        newPrefabDeployment("app-name-v5-4-3", "imageName", "v5.4.3")
+        newPrefabDeployment("app-name", "app-name-v5-4-3", "imageName", "v5.4.3")
+      )
+      serviceAccounts.createOrReplace(
+        newPrefabServiceAccount("app-name"),
       )
     }
 
     confirmVerified(services)
+    confirmVerified(deployments)
+    confirmVerified(serviceAccounts)
   }
 
   @Test
@@ -154,15 +167,7 @@ internal class DeploymentServiceSpec {
     val deploymentsMatchingLabel = mockk<FilterWatchListDeletable<Deployment, DeploymentList>>(relaxed = true) {
       every { list() } returns mockk {
         every { items } returns listOf(
-          newDeployment {
-            spec {
-              template {
-                spec {
-                  serviceAccount = "the service account"
-                }
-              }
-            }
-          },
+          newPrefabDeployment("the service account", "", "", ""),
         )
       }
     }
@@ -194,7 +199,13 @@ internal class DeploymentServiceSpec {
     } returns mockk(relaxed = true) {
       every { list() } returns mockk {
         every { items } returns listOf(
-          newPrefabDeployment("deploymentName", "imageName", "version"),
+          newDeployment {
+            spec {
+              template {
+                spec { }
+              }
+            }
+          },
         )
       }
     }

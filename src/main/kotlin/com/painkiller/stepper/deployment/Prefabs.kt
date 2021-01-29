@@ -22,33 +22,41 @@ fun newPrefabService(serviceName: String, deploymentName: String) = newService {
   }
 }
 
-fun newPrefabDeployment(deploymentName: String, imageName: String, version: String) = newDeployment {
+fun newPrefabServiceAccount(serviceAccountName: String) = newServiceAccount {
   metadata {
-    name = deploymentName
-    labels = mapOf("app" to deploymentName)
-  }
-  spec {
-    selector {
-      matchLabels = mapOf("app" to deploymentName)
-    }
-    template {
-      metadata {
-        labels = mapOf("app" to deploymentName)
-      }
-      spec {
-        containers = listOf(
-          newContainer {
-            image = "painkillergis/$imageName:$version"
-            name = deploymentName
-            ports = listOf(
-              newContainerPort {
-                containerPort = 8080
-                protocol = "TCP"
-              }
-            )
-          }
-        )
-      }
-    }
+    name = serviceAccountName
   }
 }
+
+fun newPrefabDeployment(serviceAccountName: String, deploymentName: String, imageName: String, version: String) =
+  newDeployment {
+    metadata {
+      name = deploymentName
+      labels = mapOf("app" to deploymentName)
+    }
+    spec {
+      selector {
+        matchLabels = mapOf("app" to deploymentName)
+      }
+      template {
+        metadata {
+          labels = mapOf("app" to deploymentName)
+        }
+        spec {
+          serviceAccount = serviceAccountName
+          containers = listOf(
+            newContainer {
+              image = "painkillergis/$imageName:$version"
+              name = deploymentName
+              ports = listOf(
+                newContainerPort {
+                  containerPort = 8080
+                  protocol = "TCP"
+                }
+              )
+            }
+          )
+        }
+      }
+    }
+  }

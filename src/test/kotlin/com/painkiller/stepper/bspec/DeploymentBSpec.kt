@@ -55,7 +55,7 @@ internal class DeploymentBSpec {
     }
 
     runBlocking {
-      retry(6) {
+      retry(7) {
         val response = targetDarkClient.get<HttpResponse>("/version")
         assertEquals(HttpStatusCode.OK, response.status)
         assertEquals("v0.0.3", response.receive<Version>().version)
@@ -64,7 +64,7 @@ internal class DeploymentBSpec {
 
     runBlocking {
       assertEquals(
-        "default",
+        "stepper-target-dark",
         stepperClient.get("/services/stepper-target-dark/deployment/serviceAccount"),
       )
     }

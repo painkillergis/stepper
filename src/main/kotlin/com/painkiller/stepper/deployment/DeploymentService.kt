@@ -3,15 +3,19 @@ package com.painkiller.stepper.deployment
 import io.fabric8.kubernetes.client.NamespacedKubernetesClient
 
 class DeploymentService(val kubernetesClient: NamespacedKubernetesClient) {
-  fun createOrReplace(name: String, deployment: Deployment) {
-    val deploymentName = "$name-${deployment.version.replace(".", "-")}"
+  fun createOrReplace(serviceName: String, deployment: Deployment) {
+    val deploymentName = "$serviceName-${deployment.version.replace(".", "-")}"
+
+    kubernetesClient.serviceAccounts().createOrReplace(
+      newPrefabServiceAccount(serviceName),
+    )
 
     kubernetesClient.services().createOrReplace(
-      newPrefabService(name, deploymentName)
+      newPrefabService(serviceName, deploymentName)
     )
 
     kubernetesClient.apps().deployments().createOrReplace(
-      newPrefabDeployment(deploymentName, deployment.imageName, deployment.version)
+      newPrefabDeployment(serviceName, deploymentName, deployment.imageName, deployment.version)
     )
   }
 
