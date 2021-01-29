@@ -29,7 +29,7 @@ fun main(args: Array<String>) {
           newPolicyRule {
             apiGroups = listOf("apps")
             resources = listOf("deployments")
-            verbs = listOf("create", "get", "update")
+            verbs = listOf("create", "get", "list", "update")
           }
         )
       }
@@ -52,25 +52,6 @@ fun main(args: Array<String>) {
           name = appName
         }
       }
-    )
-
-    it.services().create(
-      newPrefabService(
-        appName,
-        "$appName-black",
-      ),
-    )
-
-    it.apps().deployments().create(
-      newPrefabDeployment(
-        "$appName-black",
-        newPrefabPodTemplateSpec(
-          group,
-          appName,
-          "$appName-black",
-          version,
-        ),
-      ),
     )
   }
 }
