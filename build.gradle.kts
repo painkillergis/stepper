@@ -130,10 +130,18 @@ val bootstrap by tasks.registering(JavaExec::class) {
   args = listOf(rootProject.name)
 }
 
-val darkDeploy by tasks.registering(JavaExec::class) {
-  main = "${packageBase()}.DarkDeployKt"
-  classpath = sourceSets["devops"].runtimeClasspath
-  args = listOf("painkillergis", rootProject.name, getVersion())
+val darkDeploy by tasks.registering {
+  doLast {
+    val connection = uri("http://painkiller.arctair.com/stepper/services/stepper-dark/deployment").toURL()
+      .openConnection() as java.net.HttpURLConnection
+    connection.doOutput = true
+    connection.requestMethod = "POST"
+    connection.setRequestProperty("content-type", "application/json")
+    connection.outputStream.use {
+      it.write("{\"imageName\":\"stepper\",\"version\":\"${getVersion()}\"}".toByteArray())
+    }
+    connection.connect()
+  }
 }
 
 val waitForDarkDeployment by tasks.registering {
