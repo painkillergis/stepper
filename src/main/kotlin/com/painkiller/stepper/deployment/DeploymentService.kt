@@ -16,14 +16,18 @@ class DeploymentService(val kubernetesClient: NamespacedKubernetesClient) {
   }
 
   fun delete(name: String) {
-    val service = kubernetesClient.services().withName(name)
-    kubernetesClient.apps().deployments()
-      .withLabel("app", service.get().spec.selector["app"])
+    kubernetesClient.services().withName(name)
+      .apply {
+        get()?.apply {
+          kubernetesClient.apps().deployments()
+            .withLabel("app", spec.selector["app"])
+            .delete()
+        }
+      }
       .delete()
-    service.delete()
   }
 
-  fun getServiceAccount(serviceName: String) : String {
+  fun getServiceAccount(serviceName: String): String {
     return kubernetesClient.apps().deployments()
       .withLabel("app", kubernetesClient.services().withName(serviceName).get().spec.selector["app"])
       .list().items[0]

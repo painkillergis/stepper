@@ -125,6 +125,19 @@ internal class DeploymentServiceSpec {
   }
 
   @Test
+  fun `delete is noop when service and deployment don't exist`() {
+    val service = mockk<ServiceResource<Service>>(relaxed = true) {
+      every { get() } returns null
+    }
+    every {
+      hint(ServiceResource::class)
+      services.withName("app-name")
+    } returns service
+
+    DeploymentService(kubernetesClient).delete("app-name")
+  }
+
+  @Test
   fun `get service account`() {
     val service = mockk<ServiceResource<Service>>(relaxed = true) {
       every { get() } returns newService {
