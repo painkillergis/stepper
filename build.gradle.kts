@@ -137,31 +137,6 @@ val darkDeploy by tasks.registering(JavaExec::class) {
   args = listOf("${rootProject.name}-dark", rootProject.name, getVersion())
 }
 
-val waitForDarkDeployment by tasks.registering {
-  doLast {
-    val expectedVersion = getVersion()
-    var actualVersion = getDarkVersion()
-    if (expectedVersion != actualVersion) {
-      println("Waiting for version $expectedVersion (currently $actualVersion)")
-      do {
-        actualVersion = getDarkVersion()
-      } while (expectedVersion != actualVersion)
-    }
-  }
-}
-
-fun getDarkVersion(): String? {
-  return try {
-    uri("http://painkiller.arctair.com/stepper-dark/version")
-      .toURL()
-      .readBytes()
-      .let { groovy.json.JsonSlurper().parse(it) as? Map<String, String> }
-      ?.get("version")
-  } catch (ignored: Exception) {
-    null
-  } ?: "unavailable"
-}
-
 val switchBackend by tasks.registering(JavaExec::class) {
   main = "${packageBase()}.SwitchDeploymentsKt"
   classpath = sourceSets["devops"].runtimeClasspath
