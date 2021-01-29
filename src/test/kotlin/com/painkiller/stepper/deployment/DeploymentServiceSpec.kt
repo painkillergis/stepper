@@ -55,7 +55,7 @@ internal class DeploymentServiceSpec {
         newPrefabService("app-name", "app-name-v5-4-3")
       )
       deployments.createOrReplace(
-        newPrefabDeployment("imageName", "app-name-v5-4-3", "v5.4.3")
+        newPrefabDeployment("app-name-v5-4-3", "imageName", "v5.4.3")
       )
     }
     confirmVerified(services)
@@ -86,7 +86,7 @@ internal class DeploymentServiceSpec {
         newPrefabService("app-name", "app-name-v5-4-3")
       )
       deployments.createOrReplace(
-        newPrefabDeployment("imageName", "app-name-v5-4-3", "v5.4.3")
+        newPrefabDeployment("app-name-v5-4-3", "imageName", "v5.4.3")
       )
     }
 
@@ -194,7 +194,7 @@ internal class DeploymentServiceSpec {
     } returns mockk(relaxed = true) {
       every { list() } returns mockk {
         every { items } returns listOf(
-          newPrefabDeployment("imageName", "deploymentName", "version"),
+          newPrefabDeployment("deploymentName", "imageName", "version"),
         )
       }
     }

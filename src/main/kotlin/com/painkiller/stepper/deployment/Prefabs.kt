@@ -22,7 +22,7 @@ fun newPrefabService(serviceName: String, deploymentName: String) = newService {
   }
 }
 
-fun newPrefabDeployment(imageName: String, deploymentName: String, version: String) = newDeployment {
+fun newPrefabDeployment(deploymentName: String, imageName: String, version: String) = newDeployment {
   metadata {
     name = deploymentName
     labels = mapOf("app" to deploymentName)
