@@ -37,15 +37,14 @@ io.fabric8:kubernetes-model-storageclass:5.0.1
 io.fabric8:kubernetes-model:4.10.3
 io.fabric8:openshift-model:4.10.3
 io.fabric8:zjsonpatch:0.3.0
-io.ktor:ktor-client-cio:1.5.1
+io.ktor:ktor-client-apache-kotlinMultiplatform:1.5.1
+io.ktor:ktor-client-apache:1.5.1
 io.ktor:ktor-client-core:1.5.1
 io.ktor:ktor-client-jackson-kotlinMultiplatform:1.5.1
 io.ktor:ktor-client-jackson:1.5.1
 io.ktor:ktor-http-cio:1.5.1
 io.ktor:ktor-http:1.5.1
 io.ktor:ktor-io:1.5.1
-io.ktor:ktor-network-tls:1.5.1
-io.ktor:ktor-network:1.5.1
 io.ktor:ktor-utils:1.5.1
 jakarta.activation:jakarta.activation-api:1.2.1
 jakarta.xml.bind:jakarta.xml.bind-api:2.3.2
