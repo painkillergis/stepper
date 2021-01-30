@@ -15,7 +15,7 @@ fun main(args: Array<String>) {
           newPolicyRule {
             apiGroups = listOf("")
             resources = listOf("services")
-            verbs = listOf("create", "delete", "get", "update")
+            verbs = listOf("create", "delete", "list", "get", "update")
           },
           newPolicyRule {
             apiGroups = listOf("")
