@@ -6,6 +6,7 @@ plugins {
   kotlin("plugin.serialization") version "1.4.21"
   id("com.github.johnrengelman.shadow") version "4.0.4"
   id("com.palantir.docker") version "0.25.0"
+  id("com.painkillergis.stepper_client.stepperClient") version "1.0.8"
 }
 
 application {
@@ -31,17 +32,7 @@ repositories {
   maven { url = uri("https://dl.bintray.com/kotlin/ktor") }
 }
 
-sourceSets.create("devops").java.srcDir("src/deploy/kotlin")
-
 dependencies {
-  "devopsImplementation"("com.fkorotkov:kubernetes-dsl:+")
-  "devopsImplementation"("io.fabric8:kubernetes-client:+")
-  "devopsImplementation"("io.ktor:ktor-client-apache:+")
-  "devopsImplementation"("io.ktor:ktor-client-core:+")
-  "devopsImplementation"("io.ktor:ktor-client-jackson:+")
-  "devopsImplementation"("org.jetbrains.kotlin:kotlin-reflect:+")
-  "devopsImplementation"("org.jetbrains.kotlin:kotlin-stdlib:+")
-  "devopsImplementation"("org.slf4j:slf4j-simple:+")
   implementation("com.fkorotkov:kubernetes-dsl:+")
   implementation("io.fabric8:kubernetes-client:+")
   implementation("io.ktor:ktor-html-builder:+")
@@ -123,22 +114,4 @@ configurations.all {
 docker {
   name = "painkillergis/${rootProject.name}:${getVersion()}"
   files("build/libs/${rootProject.name}.jar")
-}
-
-val bootstrap by tasks.registering(JavaExec::class) {
-  main = "${packageBase()}.BootstrapKt"
-  classpath = sourceSets["devops"].runtimeClasspath
-  args = listOf(rootProject.name)
-}
-
-val darkDeploy by tasks.registering(JavaExec::class) {
-  main = "${packageBase()}.DeploymentKt"
-  classpath = sourceSets["devops"].runtimeClasspath
-  args = listOf("${rootProject.name}-dark", rootProject.name, getVersion())
-}
-
-val switchBackend by tasks.registering(JavaExec::class) {
-  main = "${packageBase()}.SwitchDeploymentsKt"
-  classpath = sourceSets["devops"].runtimeClasspath
-  args = listOf(rootProject.name, "${rootProject.name}-dark")
 }
