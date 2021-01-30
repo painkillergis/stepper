@@ -16,9 +16,6 @@ fun newStepperClient() = HttpClient {
 
 fun newStepperDarkClient() = HttpClient {
   install(JsonFeature)
-  install(HttpTimeout) {
-    socketTimeoutMillis = 4_000
-  }
   defaultRequest {
     url.protocol = URLProtocol.HTTP
     url.host = "painkiller.arctair.com"
