@@ -4,7 +4,6 @@ import io.ktor.client.*
 import io.ktor.client.features.*
 import io.ktor.client.features.json.*
 import io.ktor.http.*
-import okio.Timeout
 
 fun newStepperClient() = HttpClient {
   install(JsonFeature)
