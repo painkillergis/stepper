@@ -13,7 +13,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 
 @ExtendWith(MockKExtension::class)
-internal class DeploymentControllerSpec {
+internal class DeploymentControllerKtSpec {
 
   @MockK
   lateinit var deploymentService: DeploymentService
@@ -42,7 +42,6 @@ internal class DeploymentControllerSpec {
 
     assertEquals(HttpStatusCode.OK, call.response.status())
   }
-
 
   @Test
   fun `create service and deployment failure`() = withController {
