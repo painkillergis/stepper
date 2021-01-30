@@ -1,5 +1,6 @@
 package com.painkiller.stepper.deployment
 
+import com.fkorotkov.kubernetes.newLabelSelector
 import com.fkorotkov.kubernetes.newService
 import com.fkorotkov.kubernetes.spec
 import io.fabric8.kubernetes.api.model.Service
@@ -12,6 +13,8 @@ import io.fabric8.kubernetes.client.NamespacedKubernetesClient
 import io.fabric8.kubernetes.client.dsl.*
 import io.mockk.*
 import io.mockk.junit5.MockKExtension
+import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
 import kotlin.test.Test
@@ -35,6 +38,21 @@ internal class DeploymentServiceSpec {
     every { serviceAccounts() } returns serviceAccounts
   }
 
+  @BeforeEach
+  fun setup() {
+    excludeRecords {
+      services.withLabelSelector(any())
+      services.withName(any())
+    }
+  }
+
+  @AfterEach
+  fun verify() {
+    confirmVerified(services)
+    confirmVerified(deployments)
+    confirmVerified(serviceAccounts)
+  }
+
   @Test
   fun `create service, deployment, and service account when they don't exist`() {
     every {
@@ -44,27 +62,75 @@ internal class DeploymentServiceSpec {
       every { get() } returns null
     }
 
+    every {
+      services.withLabelSelector(
+        newLabelSelector {
+          matchLabels = mapOf("app" to "app-name-black")
+        }
+      )
+    } returns mockk {
+      every { list() } returns mockk {
+        every { items } returns emptyList()
+      }
+    }
+
     DeploymentService(kubernetesClient).createOrReplace(
       "app-name",
       Deployment("imageName", "v5.4.3")
     )
 
-    excludeRecords { services.withName(any()) }
     verify {
       services.createOrReplace(
-        newPrefabService("app-name", "app-name-v5-4-3")
+        newPrefabService("app-name", "app-name-black")
       )
       deployments.createOrReplace(
-        newPrefabDeployment("app-name", "app-name-v5-4-3", "imageName", "v5.4.3")
+        newPrefabDeployment("app-name", "app-name-black", "imageName", "v5.4.3")
       )
       serviceAccounts.createOrReplace(
         newPrefabServiceAccount("app-name"),
       )
     }
+  }
 
-    confirmVerified(services)
-    confirmVerified(deployments)
-    confirmVerified(serviceAccounts)
+  @Test
+  fun `replace service and deployment when another services owns the default deployment name`() {
+    every {
+      hint(ServiceResource::class)
+      services.withName("app-name")
+    } returns mockk {
+      every { get() } returns null
+    }
+
+    every {
+      services.withLabelSelector(
+        newLabelSelector {
+          matchLabels = mapOf("app" to "app-name-black")
+        }
+      )
+    } returns mockk {
+      every { list() } returns mockk {
+        every { items } returns listOf(
+          newPrefabService("app-name-other", "app-name-black"),
+        )
+      }
+    }
+
+    DeploymentService(kubernetesClient).createOrReplace(
+      "app-name",
+      Deployment("imageName", "v5.4.3")
+    )
+
+    verify {
+      services.createOrReplace(
+        newPrefabService("app-name", "app-name-red")
+      )
+      deployments.createOrReplace(
+        newPrefabDeployment("app-name", "app-name-red", "imageName", "v5.4.3")
+      )
+      serviceAccounts.createOrReplace(
+        newPrefabServiceAccount("app-name"),
+      )
+    }
   }
 
   @Test
@@ -75,8 +141,22 @@ internal class DeploymentServiceSpec {
     } returns mockk {
       every { get() } returns newService {
         spec {
-          selector = mapOf("app" to "app-name-v5-4-3")
+          selector = mapOf("app" to "app-name-black")
         }
+      }
+    }
+
+    every {
+      services.withLabelSelector(
+        newLabelSelector {
+          matchLabels = mapOf("app" to "app-name-black")
+        }
+      )
+    } returns mockk {
+      every { list() } returns mockk {
+        every { items } returns listOf(
+          newPrefabService("app-name", "app-name-black"),
+        )
       }
     }
 
@@ -85,22 +165,17 @@ internal class DeploymentServiceSpec {
       Deployment("imageName", "v5.4.3")
     )
 
-    excludeRecords { services.withName(any()) }
     verify {
       services.createOrReplace(
-        newPrefabService("app-name", "app-name-v5-4-3")
+        newPrefabService("app-name", "app-name-black")
       )
       deployments.createOrReplace(
-        newPrefabDeployment("app-name", "app-name-v5-4-3", "imageName", "v5.4.3")
+        newPrefabDeployment("app-name", "app-name-black", "imageName", "v5.4.3")
       )
       serviceAccounts.createOrReplace(
         newPrefabServiceAccount("app-name"),
       )
     }
-
-    confirmVerified(services)
-    confirmVerified(deployments)
-    confirmVerified(serviceAccounts)
   }
 
   @Test
@@ -129,20 +204,22 @@ internal class DeploymentServiceSpec {
       deploymentsMatchingLabel.delete()
     }
 
-    excludeRecords { service.get() }
+    excludeRecords {
+      service.get()
+      deployments.withLabel(any(), any())
+    }
     confirmVerified(service)
     confirmVerified(deploymentsMatchingLabel)
   }
 
   @Test
   fun `delete is noop when service and deployment don't exist`() {
-    val service = mockk<ServiceResource<Service>>(relaxed = true) {
-      every { get() } returns null
-    }
     every {
       hint(ServiceResource::class)
       services.withName("app-name")
-    } returns service
+    } returns mockk(relaxed = true) {
+      every { get() } returns null
+    }
 
     DeploymentService(kubernetesClient).delete("app-name")
   }
