@@ -19,12 +19,16 @@ internal class DeploymentControllerKtSpec {
   lateinit var deploymentService: DeploymentService
 
   @MockK
+  lateinit var deploymentSwitcherService: DeploymentSwitcherService
+
+  @MockK
   lateinit var serviceAccountService: ServiceAccountService
 
   private fun <R> withController(test: TestApplicationEngine.() -> R): R = withTestApplication(
     {
       deploymentController(
         deploymentService,
+        deploymentSwitcherService,
         serviceAccountService,
       )
       globalModules()
@@ -89,7 +93,7 @@ internal class DeploymentControllerKtSpec {
 
   @Test
   fun `swap backends`() = withController {
-    every { deploymentService.switchDeployments("service1", "service2") } returns Unit
+    every { deploymentSwitcherService.switchDeployments("service1", "service2") } returns Unit
     val call = handleRequest(method = HttpMethod.Post, uri = "/services/service1/switchDeploymentsWith/service2")
 
     assertEquals(HttpStatusCode.OK, call.response.status())
@@ -97,7 +101,7 @@ internal class DeploymentControllerKtSpec {
 
   @Test
   fun `swap backends failure`() = withController {
-    every { deploymentService.switchDeployments("service1", "service2") } throws Error("failure")
+    every { deploymentSwitcherService.switchDeployments("service1", "service2") } throws Error("failure")
     val call = handleRequest(method = HttpMethod.Post, uri = "/services/service1/switchDeploymentsWith/service2")
 
     assertEquals(HttpStatusCode.InternalServerError, call.response.status())

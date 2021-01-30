@@ -8,6 +8,7 @@ import io.ktor.routing.*
 
 fun Application.deploymentController(
   deploymentService: DeploymentService,
+  deploymentSwitcherService: DeploymentSwitcherService,
   serviceAccountService: ServiceAccountService,
 ) {
   routing {
@@ -42,7 +43,7 @@ fun Application.deploymentController(
     }
     post("/services/{firstServiceName}/switchDeploymentsWith/{lastServiceName}") {
       try {
-        deploymentService.switchDeployments(
+        deploymentSwitcherService.switchDeployments(
           call.parameters["firstServiceName"]!!,
           call.parameters["lastServiceName"]!!,
         )
