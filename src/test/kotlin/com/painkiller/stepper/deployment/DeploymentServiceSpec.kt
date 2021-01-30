@@ -1,12 +1,7 @@
 package com.painkiller.stepper.deployment
 
-import com.fkorotkov.kubernetes.newLabelSelector
-import com.fkorotkov.kubernetes.newService
-import com.fkorotkov.kubernetes.spec
-import io.fabric8.kubernetes.api.model.Service
-import io.fabric8.kubernetes.api.model.ServiceAccount
-import io.fabric8.kubernetes.api.model.ServiceAccountList
-import io.fabric8.kubernetes.api.model.ServiceList
+import com.fkorotkov.kubernetes.*
+import io.fabric8.kubernetes.api.model.*
 import io.fabric8.kubernetes.api.model.apps.Deployment
 import io.fabric8.kubernetes.api.model.apps.DeploymentList
 import io.fabric8.kubernetes.client.NamespacedKubernetesClient
@@ -41,7 +36,7 @@ internal class DeploymentServiceSpec {
   @BeforeEach
   fun setup() {
     excludeRecords {
-      services.withLabelSelector(any())
+      services.list()
       services.withName(any())
     }
   }
@@ -62,16 +57,8 @@ internal class DeploymentServiceSpec {
       every { get() } returns null
     }
 
-    every {
-      services.withLabelSelector(
-        newLabelSelector {
-          matchLabels = mapOf("app" to "app-name-black")
-        }
-      )
-    } returns mockk {
-      every { list() } returns mockk {
-        every { items } returns emptyList()
-      }
+    every { services.list() } returns mockk {
+      every { items } returns emptyList()
     }
 
     DeploymentService(kubernetesClient).createOrReplace(
@@ -102,17 +89,17 @@ internal class DeploymentServiceSpec {
     }
 
     every {
-      services.withLabelSelector(
-        newLabelSelector {
-          matchLabels = mapOf("app" to "app-name-black")
-        }
-      )
+      services.list()
     } returns mockk {
-      every { list() } returns mockk {
-        every { items } returns listOf(
-          newPrefabService("app-name-other", "app-name-black"),
-        )
-      }
+      every { items } returns listOf(
+        newPrefabService("app-name-other", "app-name-black"),
+        newService {
+          metadata {
+            name = "app-name-other-2"
+          }
+          spec {}
+        },
+      )
     }
 
     DeploymentService(kubernetesClient).createOrReplace(
@@ -147,17 +134,11 @@ internal class DeploymentServiceSpec {
     }
 
     every {
-      services.withLabelSelector(
-        newLabelSelector {
-          matchLabels = mapOf("app" to "app-name-black")
-        }
-      )
+      services.list()
     } returns mockk {
-      every { list() } returns mockk {
-        every { items } returns listOf(
-          newPrefabService("app-name", "app-name-black"),
-        )
-      }
+      every { items } returns listOf(
+        newPrefabService("app-name", "app-name-black"),
+      )
     }
 
     DeploymentService(kubernetesClient).createOrReplace(
