@@ -4,7 +4,6 @@ import io.ktor.client.*
 import io.ktor.client.features.*
 import io.ktor.client.features.json.*
 import io.ktor.http.*
-import okio.Timeout
 
 fun newStepperClient() = HttpClient {
   install(JsonFeature)
@@ -17,9 +16,6 @@ fun newStepperClient() = HttpClient {
 
 fun newStepperDarkClient() = HttpClient {
   install(JsonFeature)
-  install(HttpTimeout) {
-    socketTimeoutMillis = 4_000
-  }
   defaultRequest {
     url.protocol = URLProtocol.HTTP
     url.host = "painkiller.arctair.com"
