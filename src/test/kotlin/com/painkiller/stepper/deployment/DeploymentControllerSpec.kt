@@ -18,9 +18,15 @@ internal class DeploymentControllerSpec {
   @MockK
   lateinit var deploymentService: DeploymentService
 
+  @MockK
+  lateinit var serviceAccountService: ServiceAccountService
+
   private fun <R> withController(test: TestApplicationEngine.() -> R): R = withTestApplication(
     {
-      deploymentController(deploymentService)
+      deploymentController(
+        deploymentService,
+        serviceAccountService,
+      )
       globalModules()
     },
     test
@@ -67,7 +73,7 @@ internal class DeploymentControllerSpec {
 
   @Test
   fun `get deployment service account`() = withController {
-    every { deploymentService.getServiceAccount("anything") } returns "the service account"
+    every { serviceAccountService.getServiceAccount("anything") } returns "the service account"
     val call = handleRequest(method = HttpMethod.Get, uri = "/services/anything/deployment/serviceAccount")
 
     assertEquals(HttpStatusCode.OK, call.response.status())
@@ -76,7 +82,7 @@ internal class DeploymentControllerSpec {
 
   @Test
   fun `get deployment service account failure`() = withController {
-    every { deploymentService.getServiceAccount("anything") } throws Error("failure")
+    every { serviceAccountService.getServiceAccount("anything") } throws Error("failure")
     val call = handleRequest(method = HttpMethod.Get, uri = "/services/anything/deployment/serviceAccount")
 
     assertEquals(HttpStatusCode.InternalServerError, call.response.status())

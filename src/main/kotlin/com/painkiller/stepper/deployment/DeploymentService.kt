@@ -1,7 +1,5 @@
 package com.painkiller.stepper.deployment
 
-import com.fkorotkov.kubernetes.newService
-import com.fkorotkov.kubernetes.spec
 import io.fabric8.kubernetes.client.NamespacedKubernetesClient
 
 class DeploymentService(val kubernetesClient: NamespacedKubernetesClient) {
@@ -31,13 +29,6 @@ class DeploymentService(val kubernetesClient: NamespacedKubernetesClient) {
         }
       }
       .delete()
-  }
-
-  fun getServiceAccount(serviceName: String): String {
-    return kubernetesClient.apps().deployments()
-      .withLabel("app", kubernetesClient.services().withName(serviceName).get().spec.selector["app"])
-      .list().items[0]
-      .spec.template.spec.serviceAccount ?: "default"
   }
 
   fun switchDeployments(firstServiceName: String, lastServiceName: String) {

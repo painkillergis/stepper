@@ -6,7 +6,10 @@ import io.ktor.request.*
 import io.ktor.response.*
 import io.ktor.routing.*
 
-fun Application.deploymentController(deploymentService: DeploymentService) {
+fun Application.deploymentController(
+  deploymentService: DeploymentService,
+  serviceAccountService: ServiceAccountService,
+) {
   routing {
     post("/services/{name}/deployment") {
       try {
@@ -31,7 +34,7 @@ fun Application.deploymentController(deploymentService: DeploymentService) {
     }
     get("/services/{name}/deployment/serviceAccount") {
       try {
-        call.respond(deploymentService.getServiceAccount(call.parameters["name"]!!))
+        call.respond(serviceAccountService.getServiceAccount(call.parameters["name"]!!))
       } catch (error: Error) {
         call.application.environment.log.error(error.message)
         call.respond(HttpStatusCode.InternalServerError)

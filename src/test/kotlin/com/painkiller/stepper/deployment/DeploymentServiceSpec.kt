@@ -1,8 +1,5 @@
 package com.painkiller.stepper.deployment
 
-import com.fkorotkov.kubernetes.apps.newDeployment
-import com.fkorotkov.kubernetes.apps.spec
-import com.fkorotkov.kubernetes.apps.template
 import com.fkorotkov.kubernetes.newService
 import com.fkorotkov.kubernetes.spec
 import io.fabric8.kubernetes.api.model.Service
@@ -18,7 +15,6 @@ import io.mockk.junit5.MockKExtension
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
 import kotlin.test.Test
-import kotlin.test.assertEquals
 
 @ExtendWith(MockKExtension::class)
 internal class DeploymentServiceSpec {
@@ -149,72 +145,6 @@ internal class DeploymentServiceSpec {
     } returns service
 
     DeploymentService(kubernetesClient).delete("app-name")
-  }
-
-  @Test
-  fun `get service account`() {
-    val service = mockk<ServiceResource<Service>>(relaxed = true) {
-      every { get() } returns newService {
-        spec {
-          selector = mapOf("app" to "the deployment label")
-        }
-      }
-    }
-    every {
-      hint(ServiceResource::class)
-      services.withName("app-name")
-    } returns service
-
-    val deploymentsMatchingLabel = mockk<FilterWatchListDeletable<Deployment, DeploymentList>>(relaxed = true) {
-      every { list() } returns mockk {
-        every { items } returns listOf(
-          newPrefabDeployment("the service account", "", "", ""),
-        )
-      }
-    }
-    every {
-      deployments.withLabel("app", "the deployment label")
-    } returns deploymentsMatchingLabel
-
-    assertEquals(
-      "the service account",
-      DeploymentService(kubernetesClient).getServiceAccount("app-name"),
-    )
-  }
-
-  @Test
-  fun `get default service account`() {
-    every {
-      hint(ServiceResource::class)
-      services.withName("app-name")
-    } returns mockk(relaxed = true) {
-      every { get() } returns newService {
-        spec {
-          selector = mapOf("app" to "the deployment label")
-        }
-      }
-    }
-
-    every {
-      deployments.withLabel("app", "the deployment label")
-    } returns mockk(relaxed = true) {
-      every { list() } returns mockk {
-        every { items } returns listOf(
-          newDeployment {
-            spec {
-              template {
-                spec { }
-              }
-            }
-          },
-        )
-      }
-    }
-
-    assertEquals(
-      "default",
-      DeploymentService(kubernetesClient).getServiceAccount("app-name"),
-    )
   }
 
   @Test
