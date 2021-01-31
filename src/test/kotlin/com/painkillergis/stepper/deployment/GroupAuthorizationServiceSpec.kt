@@ -11,10 +11,11 @@ internal class GroupAuthorizationServiceSpec : StringSpec() {
   init {
     val groupAuthorizationService = GroupAuthorizationService()
 
-    "only painkillergis is authorized" {
+    "authorize some groups" {
       table(
         headers("group", "is authorized"),
         row("painkillergis", true),
+        row("arctair", true),
         row("anything else", false),
       ).forAll {group, isAuthorized ->
         groupAuthorizationService.isGroupAuthorized(group) shouldBe isAuthorized

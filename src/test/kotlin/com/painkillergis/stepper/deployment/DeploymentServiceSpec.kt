@@ -10,7 +10,6 @@ import io.mockk.*
 import io.mockk.junit5.MockKExtension
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
 import kotlin.test.Test
 
@@ -71,7 +70,7 @@ internal class DeploymentServiceSpec {
         newPrefabService("app-name", "app-name-black")
       )
       deployments.createOrReplace(
-        newPrefabDeployment("app-name", "app-name-black", "imageName", "v5.4.3")
+        newPrefabDeployment("app-name", "app-name-black", "groupName", "imageName", "v5.4.3")
       )
       serviceAccounts.createOrReplace(
         newPrefabServiceAccount("app-name"),
@@ -112,7 +111,7 @@ internal class DeploymentServiceSpec {
         newPrefabService("app-name", "app-name-red")
       )
       deployments.createOrReplace(
-        newPrefabDeployment("app-name", "app-name-red", "imageName", "v5.4.3")
+        newPrefabDeployment("app-name", "app-name-red", "groupName", "imageName", "v5.4.3")
       )
       serviceAccounts.createOrReplace(
         newPrefabServiceAccount("app-name"),
@@ -151,7 +150,7 @@ internal class DeploymentServiceSpec {
         newPrefabService("app-name", "app-name-black")
       )
       deployments.createOrReplace(
-        newPrefabDeployment("app-name", "app-name-black", "imageName", "v5.4.3")
+        newPrefabDeployment("app-name", "app-name-black", "groupName", "imageName", "v5.4.3")
       )
       serviceAccounts.createOrReplace(
         newPrefabServiceAccount("app-name"),

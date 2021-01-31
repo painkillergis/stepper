@@ -131,4 +131,32 @@ internal class DeploymentBSpec {
         .apply { assertEquals(HttpStatusCode.BadRequest, status) }
     }
   }
+
+  @Test
+  fun `create deployment for another authorized group`() {
+    runBlocking {
+      stepperClient
+        .post<HttpResponse> {
+          url("/services/stepper-target-dark/deployment")
+          contentType(ContentType.Application.Json)
+          body = mapOf(
+            "group" to "arctair",
+            "imageName" to "stepper-target",
+            "version" to "v0.0.5",
+          )
+        }
+        .apply { assertEquals(HttpStatusCode.OK, status) }
+    }
+
+    runBlocking {
+      retry(7) {
+        targetDarkClient
+          .get<HttpResponse>("/version")
+          .apply {
+            assertEquals(HttpStatusCode.OK, status)
+            assertEquals("v0.0.5", receive<Version>().version)
+          }
+      }
+    }
+  }
 }

@@ -22,7 +22,7 @@ class DeploymentService(val kubernetesClient: NamespacedKubernetesClient) {
     )
 
     kubernetesClient.apps().deployments().createOrReplace(
-      newPrefabDeployment(serviceName, deploymentName, deployment.imageName, deployment.version)
+      newPrefabDeployment(serviceName, deploymentName, deployment.group, deployment.imageName, deployment.version)
     )
   }
 

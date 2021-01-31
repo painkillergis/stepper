@@ -53,7 +53,7 @@ internal class ServiceAccountServiceSpec {
     val deploymentsMatchingLabel = mockk<FilterWatchListDeletable<Deployment, DeploymentList>>(relaxed = true) {
       every { list() } returns mockk {
         every { items } returns listOf(
-          newPrefabDeployment("the service account", "", "", ""),
+          newPrefabDeployment("the service account", "", "groupName", "", ""),
         )
       }
     }

@@ -28,7 +28,13 @@ fun newPrefabServiceAccount(serviceAccountName: String) = newServiceAccount {
   }
 }
 
-fun newPrefabDeployment(serviceAccountName: String, deploymentName: String, imageName: String, version: String) =
+fun newPrefabDeployment(
+  serviceAccountName: String,
+  deploymentName: String,
+  group: String,
+  imageName: String,
+  version: String,
+) =
   newDeployment {
     metadata {
       name = deploymentName
@@ -46,7 +52,7 @@ fun newPrefabDeployment(serviceAccountName: String, deploymentName: String, imag
           serviceAccount = serviceAccountName
           containers = listOf(
             newContainer {
-              image = "painkillergis/$imageName:$version"
+              image = "$group/$imageName:$version"
               name = deploymentName
               ports = listOf(
                 newContainerPort {
