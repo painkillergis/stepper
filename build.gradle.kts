@@ -9,15 +9,14 @@ plugins {
   id("com.painkillergis.stepper_client.stepperClient") version "1.0.10"
 }
 
-application {
-  val safeName = rootProject.name.replace("-", "_")
-  mainClassName = "$group.$safeName.ApplicationKt"
-}
-
 group = "com.painkillergis"
 val major = 1
 val minor = 0
 
+application {
+  val safeName = rootProject.name.replace("-", "_")
+  mainClassName = "$group.$safeName.ApplicationKt"
+}
 
 repositories {
   jcenter()
