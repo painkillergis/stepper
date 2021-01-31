@@ -15,6 +15,7 @@ object TestHttpClientProvider : BeforeEachCallback, ExtensionContext.Store.Close
 
   private val httpClientByName = mapOf(
     "" to HttpClient {
+      expectSuccess = false
       install(JsonFeature)
       defaultRequest {
         setBaseUrl(this, "stepper_baseUrl", "http://localhost:8080")
