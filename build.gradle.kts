@@ -10,8 +10,19 @@ plugins {
 }
 
 group = "com.painkillergis"
-val major = 1
-val minor = 0
+
+val sha =
+  ProcessBuilder("sh", "-c", "git rev-parse HEAD")
+    .start()
+    .apply { waitFor() }
+    .let { it.inputStream.bufferedReader().readText().trim() }
+
+version =
+  ProcessBuilder("sh", "-c", "git rev-list --count HEAD")
+    .start()
+    .apply { waitFor() }
+    .let { it.inputStream.bufferedReader().readText().trim() }
+    .let { "v1.0.$it" }
 
 application {
   val safeName = rootProject.name.replace("-", "_")
@@ -54,30 +65,15 @@ tasks.test {
   }
 }
 
-tasks.withType<KotlinCompile>() {
+tasks.withType<KotlinCompile> {
   kotlinOptions.jvmTarget = "11"
 }
 
 tasks.named("processResources") {
   doFirst {
     file("src/main/resources/version.properties")
-      .writeText("sha=${getSha()}\nversion=${getVersion()}")
+      .writeText(listOf("sha=$sha", "version=$version").joinToString("\n"))
   }
-}
-
-fun getSha(): String {
-  return ProcessBuilder("sh", "-c", "git rev-parse HEAD")
-    .start()
-    .apply { waitFor() }
-    .let { it.inputStream.bufferedReader().readText().trim() }
-}
-
-fun getVersion(): String {
-  return ProcessBuilder("sh", "-c", "git rev-list --count HEAD")
-    .start()
-    .apply { waitFor() }
-    .let { it.inputStream.bufferedReader().readText().trim() }
-    .let { "v$major.$minor.$it" }
 }
 
 configurations.all {
@@ -105,6 +101,6 @@ configurations.all {
 }
 
 docker {
-  name = "painkillergis/${rootProject.name}:${getVersion()}"
-  files("build/libs/${rootProject.name}.jar")
+  name = "painkillergis/${rootProject.name}:$version"
+  files("build/libs/${rootProject.name}-$version.jar")
 }
