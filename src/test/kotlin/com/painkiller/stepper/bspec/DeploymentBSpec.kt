@@ -52,52 +52,64 @@ internal class DeploymentBSpec {
   fun `create deployment`() {
     runBlocking {
       retry(6) {
-        assertEquals(
-          HttpStatusCode.ServiceUnavailable,
-          targetDarkClient.get<HttpResponse>("/version").status,
-        )
+        targetDarkClient
+          .get<HttpResponse>("/version")
+          .apply { assertEquals(HttpStatusCode.ServiceUnavailable, status) }
       }
     }
 
     runBlocking {
-      stepperClient.post<Unit> {
-        url("/services/stepper-target-dark/deployment")
-        contentType(ContentType.Application.Json)
-        body = mapOf(
-          "group" to "painkillergis",
-          "imageName" to "stepper-target",
-          "version" to "v0.0.3",
-        )
-      }
+      stepperClient
+        .post<HttpResponse> {
+          url("/services/stepper-target-dark/deployment")
+          contentType(ContentType.Application.Json)
+          body = mapOf(
+            "group" to "painkillergis",
+            "imageName" to "stepper-target",
+            "version" to "v0.0.3",
+          )
+        }
+        .apply { assertEquals(HttpStatusCode.OK, status) }
     }
 
     runBlocking {
       retry(7) {
-        val response = targetDarkClient.get<HttpResponse>("/version")
-        assertEquals(HttpStatusCode.OK, response.status)
-        assertEquals("v0.0.3", response.receive<Version>().version)
+        targetDarkClient
+          .get<HttpResponse>("/version")
+          .apply {
+            assertEquals(HttpStatusCode.OK, status)
+            assertEquals("v0.0.3", receive<Version>().version)
+          }
       }
     }
 
     runBlocking {
-      assertEquals(
-        "stepper-target-dark",
-        stepperClient.get("/services/stepper-target-dark/deployment/serviceAccount"),
-      )
+      stepperClient
+        .get<HttpResponse>("/services/stepper-target-dark/deployment/serviceAccount")
+        .apply {
+          assertEquals(HttpStatusCode.OK, status)
+          assertEquals("stepper-target-dark", content.toString())
+        }
     }
 
     runBlocking {
-      stepperClient.post<Unit>("/services/stepper-target/switchDeploymentsWith/stepper-target-dark")
+      stepperClient
+        .post<HttpResponse>("/services/stepper-target/switchDeploymentsWith/stepper-target-dark")
+        .apply { assertEquals(HttpStatusCode.OK, status) }
     }
 
     runBlocking {
       retry(7) {
-        val response = targetClient.get<HttpResponse>("/version")
-        assertEquals(HttpStatusCode.OK, response.status)
-        assertEquals("v0.0.3", response.receive<Version>().version)
+        targetClient
+          .get<HttpResponse>("/version")
+          .apply {
+            assertEquals(HttpStatusCode.OK, status)
+            assertEquals("v0.0.3", receive<Version>().version)
+          }
 
-        val darkResponse = targetDarkClient.get<HttpResponse>("/version")
-        assertEquals(HttpStatusCode.ServiceUnavailable, darkResponse.status)
+        targetDarkClient
+          .get<HttpResponse>("/version")
+          .apply { assertEquals(HttpStatusCode.ServiceUnavailable, status) }
       }
     }
   }
