@@ -64,6 +64,7 @@ internal class DeploymentBSpec {
         url("/services/stepper-target-dark/deployment")
         contentType(ContentType.Application.Json)
         body = mapOf(
+          "group" to "painkillergis",
           "imageName" to "stepper-target",
           "version" to "v0.0.3",
         )

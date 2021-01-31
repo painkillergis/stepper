@@ -24,24 +24,42 @@ internal class DeploymentControllerKtSpec {
   @MockK
   lateinit var serviceAccountService: ServiceAccountService
 
-  private fun <R> withController(test: TestApplicationEngine.() -> R): R = withTestApplication(
-    {
-      deploymentController(
-        deploymentService,
-        deploymentSwitcherService,
-        serviceAccountService,
-      )
-      globalModules()
-    },
-    test
-  )
+  private fun <R> withController(test: TestApplicationEngine.() -> R): R =
+    withTestApplication(
+      {
+        deploymentController(
+          deploymentService,
+          deploymentSwitcherService,
+          serviceAccountService,
+        )
+        globalModules()
+      },
+      test,
+    )
 
   @Test
   fun `create service and deployment`() = withController {
-    every { deploymentService.createOrReplace("anything", Deployment("imageName", "version")) } returns Unit
+    every {
+      deploymentService.createOrReplace(
+        "anything",
+        Deployment(
+          "painkillergis",
+          "imageName",
+          "version",
+        ),
+      )
+    } returns Unit
     val call = handleRequest(method = HttpMethod.Post, uri = "/services/anything/deployment") {
       addHeader("content-type", "application/json")
-      setBody(Json.encodeToString(mapOf("imageName" to "imageName", "version" to "version")))
+      setBody(
+        Json.encodeToString(
+          mapOf(
+            "group" to "painkillergis",
+            "imageName" to "imageName",
+            "version" to "version",
+          )
+        )
+      )
     }
 
     assertEquals(HttpStatusCode.OK, call.response.status())
@@ -49,10 +67,23 @@ internal class DeploymentControllerKtSpec {
 
   @Test
   fun `create service and deployment failure`() = withController {
-    every { deploymentService.createOrReplace("anything", Deployment("imageName", "version")) } throws Error("failure")
+    every {
+      deploymentService.createOrReplace(
+        "anything",
+        Deployment("painkillergis", "imageName", "version")
+      )
+    } throws Error("failure")
     val call = handleRequest(method = HttpMethod.Post, uri = "/services/anything/deployment") {
       addHeader("content-type", "application/json")
-      setBody(Json.encodeToString(mapOf("imageName" to "imageName", "version" to "version")))
+      setBody(
+        Json.encodeToString(
+          mapOf(
+            "group" to "painkillergis",
+            "imageName" to "imageName",
+            "version" to "version",
+          )
+        )
+      )
     }
 
     assertEquals(HttpStatusCode.InternalServerError, call.response.status())

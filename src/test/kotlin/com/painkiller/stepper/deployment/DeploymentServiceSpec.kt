@@ -63,7 +63,7 @@ internal class DeploymentServiceSpec {
 
     DeploymentService(kubernetesClient).createOrReplace(
       "app-name",
-      Deployment("imageName", "v5.4.3")
+      Deployment("groupName", "imageName", "v5.4.3")
     )
 
     verify {
@@ -104,7 +104,7 @@ internal class DeploymentServiceSpec {
 
     DeploymentService(kubernetesClient).createOrReplace(
       "app-name",
-      Deployment("imageName", "v5.4.3")
+      Deployment("groupName", "imageName", "v5.4.3")
     )
 
     verify {
@@ -143,7 +143,7 @@ internal class DeploymentServiceSpec {
 
     DeploymentService(kubernetesClient).createOrReplace(
       "app-name",
-      Deployment("imageName", "v5.4.3")
+      Deployment("groupName", "imageName", "v5.4.3")
     )
 
     verify {
