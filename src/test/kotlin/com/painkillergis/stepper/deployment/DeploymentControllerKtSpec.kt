@@ -22,6 +22,9 @@ internal class DeploymentControllerKtSpec {
   lateinit var deploymentSwitcherService: DeploymentSwitcherService
 
   @MockK
+  lateinit var groupAuthorizationService: GroupAuthorizationService
+
+  @MockK
   lateinit var serviceAccountService: ServiceAccountService
 
   private fun <R> withController(test: TestApplicationEngine.() -> R): R =
@@ -30,6 +33,7 @@ internal class DeploymentControllerKtSpec {
         deploymentController(
           deploymentService,
           deploymentSwitcherService,
+          groupAuthorizationService,
           serviceAccountService,
         )
         globalModules()
@@ -39,6 +43,10 @@ internal class DeploymentControllerKtSpec {
 
   @Test
   fun `create service and deployment`() = withController {
+    every {
+      groupAuthorizationService.isGroupAuthorized("painkillergis")
+    } returns true
+
     every {
       deploymentService.createOrReplace(
         "anything",
@@ -68,11 +76,16 @@ internal class DeploymentControllerKtSpec {
   @Test
   fun `create service and deployment failure`() = withController {
     every {
+      groupAuthorizationService.isGroupAuthorized("painkillergis")
+    } returns true
+
+    every {
       deploymentService.createOrReplace(
         "anything",
         Deployment("painkillergis", "imageName", "version")
       )
     } throws Error("failure")
+
     val call = handleRequest(method = HttpMethod.Post, uri = "/services/anything/deployment") {
       addHeader("content-type", "application/json")
       setBody(
@@ -87,6 +100,33 @@ internal class DeploymentControllerKtSpec {
     }
 
     assertEquals(HttpStatusCode.InternalServerError, call.response.status())
+  }
+
+  @Test
+  fun `create service when group not authorized`() = withController {
+    every {
+      groupAuthorizationService.isGroupAuthorized("painkillergis")
+    } returns false
+
+    every {
+      deploymentService.createOrReplace(allAny(), allAny())
+    } throws Error("failure")
+
+    val call = handleRequest(method = HttpMethod.Post, uri = "/services/anything/deployment") {
+      addHeader("content-type", "application/json")
+      setBody(
+        Json.encodeToString(
+          mapOf(
+            "group" to "painkillergis",
+            "imageName" to "imageName",
+            "version" to "version",
+          )
+        )
+      )
+    }
+
+    assertEquals(HttpStatusCode.BadRequest, call.response.status())
+    assertEquals("group not allowed", call.response.content)
   }
 
   @Test

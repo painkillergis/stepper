@@ -9,19 +9,25 @@ import io.ktor.routing.*
 fun Application.deploymentController(
   deploymentService: DeploymentService,
   deploymentSwitcherService: DeploymentSwitcherService,
+  groupAuthorizationService: GroupAuthorizationService,
   serviceAccountService: ServiceAccountService,
 ) {
   routing {
     post("/services/{name}/deployment") {
-      try {
-        deploymentService.createOrReplace(
-          call.parameters["name"]!!,
-          call.receive()
-        )
-        call.respond(HttpStatusCode.OK)
-      } catch (error: Error) {
-        call.application.environment.log.error(error.message)
-        call.respond(HttpStatusCode.InternalServerError)
+      val deployment = call.receive<Deployment>()
+      if (!groupAuthorizationService.isGroupAuthorized(deployment.group)) {
+        call.respond(HttpStatusCode.BadRequest, "group not allowed")
+      } else {
+        try {
+          deploymentService.createOrReplace(
+            call.parameters["name"]!!,
+            deployment,
+          )
+          call.respond(HttpStatusCode.OK)
+        } catch (error: Error) {
+          call.application.environment.log.error(error.message)
+          call.respond(HttpStatusCode.InternalServerError)
+        }
       }
     }
     delete("/services/{name}") {

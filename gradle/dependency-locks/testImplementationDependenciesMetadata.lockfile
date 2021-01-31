@@ -37,6 +37,8 @@ io.fabric8:kubernetes-model-storageclass:5.0.1
 io.fabric8:kubernetes-model:4.10.3
 io.fabric8:openshift-model:4.10.3
 io.fabric8:zjsonpatch:0.3.0
+io.kotest:kotest-runner-junit5-metadata:4.3.2
+io.kotest:kotest-runner-junit5:4.3.2
 io.ktor:ktor-client-apache-kotlinMultiplatform:1.5.1
 io.ktor:ktor-client-apache:1.5.1
 io.ktor:ktor-client-core:1.5.1
@@ -68,6 +70,8 @@ org.hamcrest:hamcrest-junit:2.0.0.0
 org.hamcrest:java-hamcrest:2.0.0.0
 org.jetbrains.kotlin:kotlin-reflect:1.4.21-2
 org.jetbrains.kotlin:kotlin-stdlib-common:1.4.21-2
+org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.4.0
+org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.4.0
 org.jetbrains.kotlin:kotlin-stdlib:1.4.21-2
 org.jetbrains.kotlin:kotlin-test-annotations-common:1.4.21
 org.jetbrains.kotlin:kotlin-test-common:1.4.21

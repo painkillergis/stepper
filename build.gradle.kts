@@ -46,6 +46,7 @@ dependencies {
   implementation("org.jetbrains.kotlin:kotlin-stdlib:+")
   implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:+")
   implementation("org.slf4j:slf4j-simple:+")
+  testImplementation("io.kotest:kotest-runner-junit5:+")
   testImplementation("io.ktor:ktor-client-apache:+")
   testImplementation("io.ktor:ktor-client-core:+")
   testImplementation("io.ktor:ktor-client-jackson:+")
@@ -87,7 +88,7 @@ configurations.all {
           when {
             version.matches(
               Regex(
-                ".*-rc$",
+                ".*[-\\.]rc\\d*$",
                 RegexOption.IGNORE_CASE
               )
             ) -> selection.reject("Release candidates are excluded")

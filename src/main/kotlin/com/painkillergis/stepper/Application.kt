@@ -1,9 +1,6 @@
 package com.painkillergis.stepper
 
-import com.painkillergis.stepper.deployment.DeploymentService
-import com.painkillergis.stepper.deployment.DeploymentSwitcherService
-import com.painkillergis.stepper.deployment.ServiceAccountService
-import com.painkillergis.stepper.deployment.deploymentController
+import com.painkillergis.stepper.deployment.*
 import com.painkillergis.stepper.version.VersionService
 import com.painkillergis.stepper.version.versionController
 import io.fabric8.kubernetes.client.DefaultKubernetesClient
@@ -23,6 +20,7 @@ fun Application.applicationModule() {
     DeploymentSwitcherService(
       kubernetesClient,
     ),
+    GroupAuthorizationService(),
     ServiceAccountService(
       kubernetesClient,
     ),

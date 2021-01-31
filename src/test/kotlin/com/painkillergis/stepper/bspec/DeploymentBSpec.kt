@@ -50,6 +50,23 @@ internal class DeploymentBSpec {
   }
 
   @Test
+  fun `create deployment not allowed for groups other than painkillergis`() {
+    runBlocking {
+      stepperClient
+        .post<HttpResponse> {
+          url("/services/stepper-target-dark/deployment")
+          contentType(ContentType.Application.Json)
+          body = mapOf(
+            "group" to "notpainkillergis",
+            "imageName" to "stepper-target",
+            "version" to "v0.0.3",
+          )
+        }
+        .apply { assertEquals(HttpStatusCode.BadRequest, status) }
+    }
+  }
+
+  @Test
   fun `create deployment`() {
     runBlocking {
       retry(6) {
