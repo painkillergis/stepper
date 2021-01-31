@@ -5,6 +5,7 @@ import io.ktor.client.call.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import io.ktor.http.*
+import io.ktor.utils.io.jvm.javaio.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.AfterEach
@@ -88,7 +89,7 @@ internal class DeploymentBSpec {
         .get<HttpResponse>("/services/stepper-target-dark/deployment/serviceAccount")
         .apply {
           assertEquals(HttpStatusCode.OK, status)
-          assertEquals("stepper-target-dark", content.toString())
+          assertEquals("stepper-target-dark", content.toInputStream().bufferedReader().readText())
         }
     }
 
