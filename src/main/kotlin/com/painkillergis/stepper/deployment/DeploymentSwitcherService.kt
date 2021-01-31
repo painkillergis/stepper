@@ -1,4 +1,4 @@
-package com.painkiller.stepper.deployment
+package com.painkillergis.stepper.deployment
 
 import io.fabric8.kubernetes.api.model.Service
 import io.fabric8.kubernetes.client.NamespacedKubernetesClient

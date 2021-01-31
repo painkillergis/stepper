@@ -1,4 +1,4 @@
-package com.painkiller.stepper.bspec
+package com.painkillergis.stepper.bspec
 
 data class Version(
   val sha: String,

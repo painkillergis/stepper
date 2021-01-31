@@ -1,4 +1,4 @@
-package com.painkiller.stepper.version
+package com.painkillergis.stepper.version
 
 import java.util.*
 

@@ -1,4 +1,4 @@
-package com.painkiller.stepper.deployment
+package com.painkillergis.stepper.deployment
 
 import com.fkorotkov.kubernetes.newService
 import com.fkorotkov.kubernetes.spec

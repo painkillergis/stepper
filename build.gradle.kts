@@ -10,20 +10,14 @@ plugins {
 }
 
 application {
-  mainClassName = "${packageBase()}.ApplicationKt"
+  val safeName = rootProject.name.replace("-", "_")
+  mainClassName = "$group.$safeName.ApplicationKt"
 }
 
-group = "com.painkiller"
+group = "com.painkillergis"
 val major = 1
 val minor = 0
 
-fun safeName(): String {
-  return rootProject.name.replace("-", "_")
-}
-
-fun packageBase(): String {
-  return "com.painkiller.${safeName()}"
-}
 
 repositories {
   jcenter()

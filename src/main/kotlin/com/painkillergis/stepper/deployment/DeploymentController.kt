@@ -1,4 +1,4 @@
-package com.painkiller.stepper.deployment
+package com.painkillergis.stepper.deployment
 
 import io.ktor.application.*
 import io.ktor.http.*

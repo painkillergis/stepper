@@ -1,4 +1,4 @@
-package com.painkiller.stepper.bspec
+package com.painkillergis.stepper.bspec
 
 import io.ktor.client.*
 import io.ktor.client.features.*

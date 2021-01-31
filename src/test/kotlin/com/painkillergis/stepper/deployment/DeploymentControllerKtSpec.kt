@@ -1,6 +1,6 @@
-package com.painkiller.stepper.deployment
+package com.painkillergis.stepper.deployment
 
-import com.painkiller.stepper.globalModules
+import com.painkillergis.stepper.globalModules
 import io.ktor.http.*
 import io.ktor.server.testing.*
 import io.mockk.every

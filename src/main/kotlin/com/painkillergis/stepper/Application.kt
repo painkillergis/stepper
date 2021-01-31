@@ -1,11 +1,11 @@
-package com.painkiller.stepper
+package com.painkillergis.stepper
 
-import com.painkiller.stepper.deployment.DeploymentService
-import com.painkiller.stepper.deployment.DeploymentSwitcherService
-import com.painkiller.stepper.deployment.ServiceAccountService
-import com.painkiller.stepper.deployment.deploymentController
-import com.painkiller.stepper.version.VersionService
-import com.painkiller.stepper.version.versionController
+import com.painkillergis.stepper.deployment.DeploymentService
+import com.painkillergis.stepper.deployment.DeploymentSwitcherService
+import com.painkillergis.stepper.deployment.ServiceAccountService
+import com.painkillergis.stepper.deployment.deploymentController
+import com.painkillergis.stepper.version.VersionService
+import com.painkillergis.stepper.version.versionController
 import io.fabric8.kubernetes.client.DefaultKubernetesClient
 import io.ktor.application.*
 import io.ktor.features.*

@@ -1,6 +1,6 @@
-package com.painkiller.stepper.bspec
+package com.painkillergis.stepper.bspec
 
-import com.painkiller.stepper.applicationModule
+import com.painkillergis.stepper.applicationModule
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
 import org.junit.jupiter.api.extension.BeforeAllCallback
